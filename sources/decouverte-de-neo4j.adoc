@@ -1,4 +1,10 @@
 = Découverte de Neo4j
+Christophe Willemsen <chris@neoxygen.io>
+v1.0, 14-01-2015
+:toc:
+:homepage: http://chris.neoxygen.io
+
+link:../index.html[Accueil]
 
 == Introduction
 
