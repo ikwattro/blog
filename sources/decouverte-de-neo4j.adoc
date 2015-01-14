@@ -27,3 +27,78 @@ Prenons un cas d'usage classique, où des utilisateurs suivent d'autres utilisat
 Un utilisateur sera représentée par un *noeud* et peut avoir un libellé (Label) et des propriétés. Les libellés peuvent servir à définir les différents rôles de vos noeuds.
 
 image::../_images/user_node.png[Un noeud utilisateur]
+
+Le lien entre ces deux utilisateurs sera représenté par une *Relation*, qui peut également avoir des propriétés et un *type* représentant la nature de cette relation. Les relations ajoutent une signification sémantique à vos données.
+
+image::../_images/relation.png[Une relation]
+
+En analysant le graphe, nous pouvons nous rendre compte qu'il est naturel de représenter nos données dans un graphe et de l'enregistrer dans une base de données graphe.
+
+image::../_images/relation2.png[Des relations]
+
+== Cypher, le langage de requêtes Neo4j
+
+Requêter un graphe peut sembler difficile au premier abord. Afin de simplifier ce processus, Neo4j a développé Cypher, un langage de requêtes déclaratif orienté graphes, optimisé pour la lisibilité and la facilité d'expression humaine pour les développeurs, administrateurs et les experts de domaines.
+
+Etant déclaratif, Cypher se tourne sur l'expression de demander *que* retrouver dans le graphe et non *comment* le retrouver.
+
+Le langage se compose de plusieurs clauses distinctes. Vous pouvez en apprendre d'avantage dans le http://neo4j.com/docs/stable/[manuel Neo4j].
+
+Voici une liste non-exhaustive des clauses quotidiennement utilisées pour lire et mettre à jour le graphe :
+
+[horizontal]
+MATCH:: Trouve un "exemple" de motif que vous définissez dans le graphe.
+WHERE:: Filtre les résultats avec des prédicats, comme en SQL. Il y a beaucoup de prédicats en Cypher cependants, incluant les opérations de collection et les *MATCH* de graphes.
+RETURN:: Retourne un résultat de requête sous la forme demandée, valeurs scalaires, éléments de graph, chemins, collections ou même documents.
+CREATE:: Crée des éléments de graphe (noeuds ou relations) avec les libellés et propriétés.
+MERGE:: Trouve ou crée des motifs. C'est une combinaison de MATCH et CREATE.
+
+Cypher est avant-tout orienté motifs, signifiant que vous décrivez une représentation visuelle que vous avez déjà vu en texte (ASCii-art). Il utilise les parenthèses pour définir les noeuds (comme *(u:User)*) et des flèches (comme *-->* ou *-[:SUIT]->* ) pour les relations.
+
+En regardant le dernier graphes des utilisateurs, une requête demandant de retrouver Hannah Hilpert et les utilisateurs la suivant peut être écrite de la façon suivante :
+
+
+[source,cypher]
+----
+MATCH (user:User {name:'Hannah Hilpert'})<-[:FOLLOWS]-(follower) 
+RETURN user, follower
+----
+
+== Quelques notions de Franglais
+
+La communauté Neo4j est magnifique, composée de personnes vraiment très compétentes et super sympathiques. Beaucoup de resources sont disponibles sur Internet mais peu malheureusement sont en Français.
+
+L'initiative de la traduction du manuel, dont je suis à l'origine, a pour l'instant été stoppée jusqu'à ce qu'un processus de traduction efficace soit mis en place.
+
+Afin donc de ne pas vous perdre sur la toile, voici quelques notions Français => Anglais qui pourront vous être utiles afin de trouver des informations sur le net.
+
+[horizontal]
+Noeud:: *Node* Représentant une entité dans votre graphe
+Libellé:: *Label* Permet de grouper les noeuds par utilisation, par exemple les labels User, Person, Category, Color, ...
+Type:: *Type* de la relation, permet d'ajouter un sens à vos relations, par exemple :CONNAIS, :SUIT, :TRAVAILLE_CHEZ, :AIME_PRODUIT
+Path:: Chemin comprenant une collection de noeuds et de relations entre deux noeuds
+
+== Conclusion
+
+Le but de ce billet était de titiller votre curiosité et de vous faire découvrir les bases de données graphe, et particulièrement Neo4j. Nous avons pu constater que le traitement de données connectées naturel dans un graphe et que vous pouvez avoir un aperçu direct de l'impact de ces relations.
+
+Je vous invite à consulter le net (ou attendre mon prochain billet) afin d'en savoir plus sur Neo4j et ces multiples cas d'usage.
+
+J'en profite aussi pour vous inviter à assister à un de nos nombreux meetups en France ou en Belgique dont voici la liste des liens :
+
+* link:http://www.meetup.com/graphdb-france/[Neo4j GraphDB Paris]
+* link:http://www.meetup.com/graphdb-Lyon/[Neo4j GraphDB Lyon]
+* link:http://www.meetup.com/graphdb-lille/[Neo4j GraphDB Lille]
+* link:http://www.meetup.com/graphdb-belgium/[Neo4j GraphDB Bruxelles]
+
+Merci pour votre lecture, et je vous dis à bientôt.
+
+---
+
+Vous avez trouvé une faute ? N'hésitez pas à me le signaler ou en la corrigeant https://github.com/ikwattro/blog/blob/master/sources/decouverte-de-neo4j.adoc[ici].
+
+---
+
+[horizontal]
+Twitter:: https://twitter.com/ikwattro
+Github:: https://github.com/ikwattro

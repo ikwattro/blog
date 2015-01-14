@@ -462,12 +462,209 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <img src="../_images/user_node.png" alt="Un noeud utilisateur">
 </div>
 </div>
+<div class="paragraph">
+<p>Le lien entre ces deux utilisateurs sera représenté par une <strong>Relation</strong>, qui peut également avoir des propriétés et un <strong>type</strong> représentant la nature de cette relation. Les relations ajoutent une signification sémantique à vos données.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/relation.png" alt="Une relation">
+</div>
+</div>
+<div class="paragraph">
+<p>En analysant le graphe, nous pouvons nous rendre compte qu&#8217;il est naturel de représenter nos données dans un graphe et de l&#8217;enregistrer dans une base de données graphe.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/relation2.png" alt="Des relations">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cypher_le_langage_de_requêtes_neo4j">Cypher, le langage de requêtes Neo4j</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Requêter un graphe peut sembler difficile au premier abord. Afin de simplifier ce processus, Neo4j a développé Cypher, un langage de requêtes déclaratif orienté graphes, optimisé pour la lisibilité and la facilité d&#8217;expression humaine pour les développeurs, administrateurs et les experts de domaines.</p>
+</div>
+<div class="paragraph">
+<p>Etant déclaratif, Cypher se tourne sur l&#8217;expression de demander <strong>que</strong> retrouver dans le graphe et non <strong>comment</strong> le retrouver.</p>
+</div>
+<div class="paragraph">
+<p>Le langage se compose de plusieurs clauses distinctes. Vous pouvez en apprendre d&#8217;avantage dans le <a href="http://neo4j.com/docs/stable/">manuel Neo4j</a>.</p>
+</div>
+<div class="paragraph">
+<p>Voici une liste non-exhaustive des clauses quotidiennement utilisées pour lire et mettre à jour le graphe :</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+MATCH
+</td>
+<td class="hdlist2">
+<p>Trouve un "exemple" de motif que vous définissez dans le graphe.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+WHERE
+</td>
+<td class="hdlist2">
+<p>Filtre les résultats avec des prédicats, comme en SQL. Il y a beaucoup de prédicats en Cypher cependants, incluant les opérations de collection et les <strong>MATCH</strong> de graphes.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+RETURN
+</td>
+<td class="hdlist2">
+<p>Retourne un résultat de requête sous la forme demandée, valeurs scalaires, éléments de graph, chemins, collections ou même documents.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+CREATE
+</td>
+<td class="hdlist2">
+<p>Crée des éléments de graphe (noeuds ou relations) avec les libellés et propriétés.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+MERGE
+</td>
+<td class="hdlist2">
+<p>Trouve ou crée des motifs. C&#8217;est une combinaison de MATCH et CREATE.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Cypher est avant-tout orienté motifs, signifiant que vous décrivez une représentation visuelle que vous avez déjà vu en texte (ASCii-art). Il utilise les parenthèses pour définir les noeuds (comme <strong>(u:User)</strong>) et des flèches (comme <strong>-&#8594;</strong> ou <strong>-[:SUIT]&#8594;</strong> ) pour les relations.</p>
+</div>
+<div class="paragraph">
+<p>En regardant le dernier graphes des utilisateurs, une requête demandant de retrouver Hannah Hilpert et les utilisateurs la suivant peut être écrite de la façon suivante :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (user:User {name:'Hannah Hilpert'})&lt;-[:FOLLOWS]-(follower)
+RETURN user, follower</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_quelques_notions_de_franglais">Quelques notions de Franglais</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>La communauté Neo4j est magnifique, composée de personnes vraiment très compétentes et super sympathiques. Beaucoup de resources sont disponibles sur Internet mais peu malheureusement sont en Français.</p>
+</div>
+<div class="paragraph">
+<p>L&#8217;initiative de la traduction du manuel, dont je suis à l&#8217;origine, a pour l&#8217;instant été stoppée jusqu&#8217;à ce qu&#8217;un processus de traduction efficace soit mis en place.</p>
+</div>
+<div class="paragraph">
+<p>Afin donc de ne pas vous perdre sur la toile, voici quelques notions Français &#8658; Anglais qui pourront vous être utiles afin de trouver des informations sur le net.</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Noeud
+</td>
+<td class="hdlist2">
+<p><strong>Node</strong> Représentant une entité dans votre graphe</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Libellé
+</td>
+<td class="hdlist2">
+<p><strong>Label</strong> Permet de grouper les noeuds par utilisation, par exemple les labels User, Person, Category, Color, &#8230;&#8203;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Type
+</td>
+<td class="hdlist2">
+<p><strong>Type</strong> de la relation, permet d&#8217;ajouter un sens à vos relations, par exemple :CONNAIS, :SUIT, :TRAVAILLE_CHEZ, :AIME_PRODUIT</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Path
+</td>
+<td class="hdlist2">
+<p>Chemin comprenant une collection de noeuds et de relations entre deux noeuds</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le but de ce billet était de titiller votre curiosité et de vous faire découvrir les bases de données graphe, et particulièrement Neo4j. Nous avons pu constater que le traitement de données connectées naturel dans un graphe et que vous pouvez avoir un aperçu direct de l&#8217;impact de ces relations.</p>
+</div>
+<div class="paragraph">
+<p>Je vous invite à consulter le net (ou attendre mon prochain billet) afin d&#8217;en savoir plus sur Neo4j et ces multiples cas d&#8217;usage.</p>
+</div>
+<div class="paragraph">
+<p>J&#8217;en profite aussi pour vous inviter à assister à un de nos nombreux meetups en France ou en Belgique dont voici la liste des liens :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://www.meetup.com/graphdb-france/">Neo4j GraphDB Paris</a></p>
+</li>
+<li>
+<p><a href="http://www.meetup.com/graphdb-Lyon/">Neo4j GraphDB Lyon</a></p>
+</li>
+<li>
+<p><a href="http://www.meetup.com/graphdb-lille/">Neo4j GraphDB Lille</a></p>
+</li>
+<li>
+<p><a href="http://www.meetup.com/graphdb-belgium/">Neo4j GraphDB Bruxelles</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Merci pour votre lecture, et je vous dis à bientôt.</p>
+</div>
+<hr>
+<div class="paragraph">
+<p>Vous avez trouvé une faute ? N&#8217;hésitez pas à me le signaler ou en la corrigeant <a href="https://github.com/ikwattro/blog/blob/master/sources/decouverte-de-neo4j.adoc">ici</a>.</p>
+</div>
+<hr>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Twitter
+</td>
+<td class="hdlist2">
+<p><a href="https://twitter.com/ikwattro" class="bare">https://twitter.com/ikwattro</a></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Github
+</td>
+<td class="hdlist2">
+<p><a href="https://github.com/ikwattro" class="bare">https://github.com/ikwattro</a></p>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-01-14 02:24:31 CET
+Last updated 2015-01-14 03:10:36 CET
 </div>
 </div>
 </body>
