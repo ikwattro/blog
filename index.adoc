@@ -1,6 +1,6 @@
 = Christophe Willemsen
 
-A blog about Neo4j and PHP
+I'm not solving problems, I'm experiencing new realities...
 
 == Latest articles | Derniers articles
 
