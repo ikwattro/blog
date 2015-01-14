@@ -88,7 +88,7 @@ Chemin:: *Path* Séquence de noeuds et de relations entre deux points du graphe
 
 == Cas d'usages classiques
 
-=== 1. Recommendation de produits
+=== 1. Recommandation de produits
 
 Dans l'exemple de modèle suivant, nous traçons l'achat de produits par des utilisateurs. Le schéma classique est 
 
