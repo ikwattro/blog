@@ -1,6 +1,6 @@
 = Découverte de Neo4j, la base de données graphe
 Christophe Willemsen <chris@neoxygen.io>
-v1.0, 14-01-2015
+v1.1, 14-01-2015
 :toc:
 :homepage: http://chris.neoxygen.io
 
