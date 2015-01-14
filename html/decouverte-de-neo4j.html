@@ -427,7 +427,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_qu_est_ce_qu_une_base_de_données_graphe">Qu&#8217;est-ce qu&#8217;une base de données graphe ?</a></li>
 <li><a href="#_cypher_le_langage_de_requêtes_neo4j">Cypher, le langage de requêtes Neo4j</a></li>
 <li><a href="#_quelques_notions_de_franglais">Quelques notions de Franglais</a></li>
-<li><a href="#_cas_d_usages_classiques">Cas d&#8217;usages classiques</a></li>
+<li><a href="#_cas_d_usages_classiques">Cas d&#8217;usages classiques</a>
+<ul class="sectlevel2">
+<li><a href="#_1_recommendation_de_produits">1. Recommendation de produits</a></li>
+<li><a href="#_2_analyse_d_impact_réseau">2. Analyse d&#8217;impact réseau</a></li>
+</ul>
+</li>
 <li><a href="#_conclusion">Conclusion</a></li>
 </ul>
 </div>
@@ -637,13 +642,8 @@ Chemin
 <div class="sect1">
 <h2 id="_cas_d_usages_classiques">Cas d&#8217;usages classiques</h2>
 <div class="sectionbody">
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Recommendation de produits</p>
-</li>
-</ol>
-</div>
+<div class="sect2">
+<h3 id="_1_recommendation_de_produits">1. Recommendation de produits</h3>
 <div class="paragraph">
 <p>Dans l&#8217;exemple de modèle suivant, nous traçons l&#8217;achat de produits par des utilisateurs. Le schéma classique est</p>
 </div>
@@ -686,6 +686,24 @@ RETURN judd, produit2 as recommandations</code></pre>
 <div class="imageblock">
 <div class="content">
 <img src="../_images/reco_product_result.png" alt="Recommandation résultat">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_analyse_d_impact_réseau">2. Analyse d&#8217;impact réseau</h3>
+<div class="paragraph">
+<p>Dans ce deuxième exemple, prenons un cas (simplifié) où des clients de service internet sont reliés à des routeurs qui eux sont reliés à des centrales.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/impact.png" alt="Analyse d'impact">
+</div>
+</div>
+<div class="paragraph">
+<p>Comme pour le cas précendent, visualiser le graphe ne vous demande aucun effort et cette <strong>visualisation en graphe vous permet de mieux comprendre vos données</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Nous pouvons analyser directement quels clients seront touchés en cas de travaux ou une panne sur un des routeurs ou une centrale.</p>
 </div>
 </div>
 </div>
@@ -764,7 +782,7 @@ Github
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2015-01-14 11:56:16 CET
+Last updated 2015-01-14 12:10:07 CET
 </div>
 </div>
 </body>

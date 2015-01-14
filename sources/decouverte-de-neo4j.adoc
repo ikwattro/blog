@@ -88,7 +88,7 @@ Chemin:: *Path* Séquence de noeuds et de relations entre deux points du graphe
 
 == Cas d'usages classiques
 
-1. Recommendation de produits
+=== 1. Recommendation de produits
 
 Dans l'exemple de modèle suivant, nous traçons l'achat de produits par des utilisateurs. Le schéma classique est 
 
@@ -114,6 +114,16 @@ RETURN judd, produit2 as recommandations
 Le résultat suivant est retourné :
 
 image::../_images/reco_product_result.png[Recommandation résultat]
+
+=== 2. Analyse d'impact réseau
+
+Dans ce deuxième exemple, prenons un cas (simplifié) où des clients de service internet sont reliés à des routeurs qui eux sont reliés à des centrales.
+
+image::../_images/impact.png[Analyse d'impact]
+
+Comme pour le cas précendent, visualiser le graphe ne vous demande aucun effort et cette *visualisation en graphe vous permet de mieux comprendre vos données*.
+
+Nous pouvons analyser directement quels clients seront touchés en cas de travaux ou une panne sur un des routeurs ou une centrale.
 
 == Conclusion
 
