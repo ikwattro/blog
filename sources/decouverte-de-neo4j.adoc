@@ -86,6 +86,35 @@ Libellé:: *Label* Permet de grouper les noeuds par utilisation, par exemple les
 Type:: *Type* de la relation, permet d'ajouter un sens à vos relations, par exemple :CONNAIS, :SUIT, :TRAVAILLE_CHEZ, :AIME_PRODUIT
 Chemin:: *Path* Séquence de noeuds et de relations entre deux points du graphe
 
+== Cas d'usages classiques
+
+1. Recommendation de produits
+
+Dans l'exemple de modèle suivant, nous traçons l'achat de produits par des utilisateurs. Le schéma classique est 
+
+* Un noeud *Person*
+* Un noeud *Product*
+* Une relation *:ACHETE* entre Person et Product
+
+image::../_images/reco_produit.png[Recommandation produits]
+
+Il suffit d'une simple visualisation du graphe pour s'apercevoir que Judd et Geoffrey ont acheté deux produits en commun. Nous pourrions donc recommander à Judd les autres produits que Geoffrey a acheté.
+
+Et en Cypher, il est tout aussi facile de le faire que de le dire :
+
+[source,cypher]
+----
+MATCH (judd:Person {firstname:'Judd'})
+MATCH (geoffrey:Person {firstname:'Geoffrey'})
+MATCH (judd)-[:ACHETE]->(produit:Product)<-[:ACHETE]-(geoffrey)-[:ACHETE]->(produit2)
+WHERE NOT (judd)-[:ACHETE]->(produit2)
+RETURN judd, produit2 as recommandations
+----
+
+Le résultat suivant est retourné :
+
+image::../_images/reco_product_result.png[Recommandation résultat]
+
 == Conclusion
 
 Le but de ce billet était de titiller votre curiosité et de vous faire découvrir les bases de données graphe, et particulièrement Neo4j. Nous avons pu constater que le traitement de données connectées est naturel dans un graphe et que vous pouvez avoir un aperçu direct de l'impact de ces relations.

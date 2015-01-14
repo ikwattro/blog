@@ -427,6 +427,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_qu_est_ce_qu_une_base_de_données_graphe">Qu&#8217;est-ce qu&#8217;une base de données graphe ?</a></li>
 <li><a href="#_cypher_le_langage_de_requêtes_neo4j">Cypher, le langage de requêtes Neo4j</a></li>
 <li><a href="#_quelques_notions_de_franglais">Quelques notions de Franglais</a></li>
+<li><a href="#_cas_d_usages_classiques">Cas d&#8217;usages classiques</a></li>
 <li><a href="#_conclusion">Conclusion</a></li>
 </ul>
 </div>
@@ -634,6 +635,62 @@ Chemin
 </div>
 </div>
 <div class="sect1">
+<h2 id="_cas_d_usages_classiques">Cas d&#8217;usages classiques</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Recommendation de produits</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Dans l&#8217;exemple de modèle suivant, nous traçons l&#8217;achat de produits par des utilisateurs. Le schéma classique est</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Un noeud <strong>Person</strong></p>
+</li>
+<li>
+<p>Un noeud <strong>Product</strong></p>
+</li>
+<li>
+<p>Une relation <strong>:ACHETE</strong> entre Person et Product</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/reco_produit.png" alt="Recommandation produits">
+</div>
+</div>
+<div class="paragraph">
+<p>Il suffit d&#8217;une simple visualisation du graphe pour s&#8217;apercevoir que Judd et Geoffrey ont acheté deux produits en commun. Nous pourrions donc recommander à Judd les autres produits que Geoffrey a acheté.</p>
+</div>
+<div class="paragraph">
+<p>Et en Cypher, il est tout aussi facile de le faire que de le dire :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (judd:Person {firstname:'Judd'})
+MATCH (geoffrey:Person {firstname:'Geoffrey'})
+MATCH (judd)-[:ACHETE]-&gt;(produit:Product)&lt;-[:ACHETE]-(geoffrey)-[:ACHETE]-&gt;(produit2)
+WHERE NOT (judd)-[:ACHETE]-&gt;(produit2)
+RETURN judd, produit2 as recommandations</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Le résultat suivant est retourné :</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/reco_product_result.png" alt="Recommandation résultat">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -707,7 +764,7 @@ Github
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2015-01-14 11:33:59 CET
+Last updated 2015-01-14 11:56:16 CET
 </div>
 </div>
 </body>
