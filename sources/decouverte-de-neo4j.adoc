@@ -127,9 +127,12 @@ Nous pouvons analyser directement quels clients seront touchés en cas de travau
 
 == Conclusion
 
-Le but de ce billet était de titiller votre curiosité et de vous faire découvrir les bases de données graphe, et particulièrement Neo4j. Nous avons pu constater que le traitement de données connectées est naturel dans un graphe et que vous pouvez avoir un aperçu direct de l'impact de ces relations.
+Le but de ce billet était de titiller votre curiosité et de vous faire découvrir les bases de données graphe, et particulièrement Neo4j. 
+Nous avons pu constater que le traitement de données connectées est naturel dans un graphe et que vous pouvez avoir un aperçu direct de l'impact de ces relations.
 
-Je vous invite à consulter le net (ou attendre mon prochain billet) afin d'en savoir plus sur Neo4j et ces multiples cas d'usage.
+Si vous avez hâte d'utiliser Neo4j, vous pouvez l'installer en version embarquée pour Java ou en version serveur disponible http://dist.neo4j.org/neo4j-community-2.1.6-unix.tar.gz[ici]. La version serveur propose une API ReST et vous trouverez un driver en fonction de votre langage de programmation sur http://neo4j.com/developer/language-guides/[cette page].
+
+Vous pouvez consulter le net (ou attendre mon prochain billet) pour en découvrir d'avantage sur Neo4j et ces multiples cas d'usage.
 
 J'en profite aussi pour vous inviter à assister à un de nos nombreux meetups en France ou en Belgique dont voici la liste des liens :
 
