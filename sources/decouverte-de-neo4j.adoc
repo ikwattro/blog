@@ -92,23 +92,23 @@ Chemin:: *Path* Séquence de noeuds et de relations entre deux points du graphe
 
 Dans l'exemple de modèle suivant, nous traçons l'achat de produits par des utilisateurs. Le schéma classique est 
 
-* Un noeud *Person*
-* Un noeud *Product*
-* Une relation *:ACHETE* entre Person et Product
+* Un noeud *Personne*
+* Un noeud *Produit*
+* Une relation *:ACHETE* entre Personne et Produit
 
 image::../_images/reco_produit.png[Recommandation produits]
 
-Il suffit d'une simple visualisation du graphe pour s'apercevoir que Judd et Geoffrey ont acheté deux produits en commun. Nous pourrions donc recommander à Judd les autres produits que Geoffrey a acheté.
+Il suffit d'une simple visualisation du graphe pour s'apercevoir que Ambrose et Noemie ont acheté deux produits en commun. Nous pourrions donc recommander à Ambrose les autres produits que Noemie a acheté.
 
 Et en Cypher, il est tout aussi facile de le faire que de le dire :
 
 [source,cypher]
 ----
-MATCH (judd:Person {firstname:'Judd'})
-MATCH (geoffrey:Person {firstname:'Geoffrey'})
-MATCH (judd)-[:ACHETE]->(produit:Product)<-[:ACHETE]-(geoffrey)-[:ACHETE]->(produit2)
-WHERE NOT (judd)-[:ACHETE]->(produit2)
-RETURN judd, produit2 as recommandations
+MATCH (ambrose:Personne {firstname:'Ambrose'})
+MATCH (noemie:Personne {firstname:'Noemie'})
+MATCH (ambrose)-[:ACHETE]->(produit:Produit)<-[:ACHETE]-(noemie)-[:ACHETE]->(produit2)
+WHERE NOT (ambrose)-[:ACHETE]->(produit2)
+RETURN ambrose, produit2 as recommandations
 ----
 
 Le résultat suivant est retourné :

@@ -650,13 +650,13 @@ Chemin
 <div class="ulist">
 <ul>
 <li>
-<p>Un noeud <strong>Person</strong></p>
+<p>Un noeud <strong>Personne</strong></p>
 </li>
 <li>
-<p>Un noeud <strong>Product</strong></p>
+<p>Un noeud <strong>Produit</strong></p>
 </li>
 <li>
-<p>Une relation <strong>:ACHETE</strong> entre Person et Product</p>
+<p>Une relation <strong>:ACHETE</strong> entre Personne et Produit</p>
 </li>
 </ul>
 </div>
@@ -666,18 +666,18 @@ Chemin
 </div>
 </div>
 <div class="paragraph">
-<p>Il suffit d&#8217;une simple visualisation du graphe pour s&#8217;apercevoir que Judd et Geoffrey ont acheté deux produits en commun. Nous pourrions donc recommander à Judd les autres produits que Geoffrey a acheté.</p>
+<p>Il suffit d&#8217;une simple visualisation du graphe pour s&#8217;apercevoir que Ambrose et Noemie ont acheté deux produits en commun. Nous pourrions donc recommander à Ambrose les autres produits que Noemie a acheté.</p>
 </div>
 <div class="paragraph">
 <p>Et en Cypher, il est tout aussi facile de le faire que de le dire :</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (judd:Person {firstname:'Judd'})
-MATCH (geoffrey:Person {firstname:'Geoffrey'})
-MATCH (judd)-[:ACHETE]-&gt;(produit:Product)&lt;-[:ACHETE]-(geoffrey)-[:ACHETE]-&gt;(produit2)
-WHERE NOT (judd)-[:ACHETE]-&gt;(produit2)
-RETURN judd, produit2 as recommandations</code></pre>
+<pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (ambrose:Personne {firstname:'Ambrose'})
+MATCH (noemie:Personne {firstname:'Noemie'})
+MATCH (ambrose)-[:ACHETE]-&gt;(produit:Produit)&lt;-[:ACHETE]-(noemie)-[:ACHETE]-&gt;(produit2)
+WHERE NOT (ambrose)-[:ACHETE]-&gt;(produit2)
+RETURN ambrose, produit2 as recommandations</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -782,7 +782,7 @@ Github
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2015-01-14 12:10:07 CET
+Last updated 2015-01-14 12:25:10 CET
 </div>
 </div>
 </body>
