@@ -452,7 +452,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Et ceci pour une bonne raison. Le modèle graphe vous offre une manière flexible de traiter les relations qui existent dans vos données. Et les bases de données graphes vous offrent une solution rapide et efficace pour stocker, retrouver et interroger ces données.</p>
 </div>
 <div class="paragraph">
-<p><a href="http://neo4j.org">Neo4j</a>, la base de données graphe la plus populaire, a prouvé son abilité à traiter de larges quantitiés de données ultra-connectées dans beaucoup de cas d&#8217;usage. Durant la dernière édition du <a href="http://graphconnect.com/">GraphConnect</a>, des compagnies comme TomTom et Ebay&#8217;s Shutlle ont démontré le gain que leur apporté l&#8217;adoption de Neo4j afin d&#8217;offrir une expérience utilisateur unique à leurs clients ou editer des mappings de cartographie.</p>
+<p><a href="http://neo4j.org">Neo4j</a>, la base de données graphe la plus populaire, a prouvé son abilité à traiter de larges quantitiés de données ultra-connectées dans beaucoup de cas d&#8217;usage. Durant la dernière édition du <a href="http://graphconnect.com/">GraphConnect</a>, des compagnies comme TomTom et Ebay&#8217;s Shutlle ont démontré le gain que leur apportait l&#8217;adoption de Neo4j afin d&#8217;offrir une expérience utilisateur unique à leurs clients ou editer des mappings de cartographie.</p>
 </div>
 <div class="paragraph">
 <p>Neo4j est développé et supporté par <strong>Neo Technology</strong>, une startup qui est devenue une société respectée dans le monde des bases de données.</p>
@@ -479,7 +479,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Une base de données graphe est une base de données optimisée pour les opérations sur les données connectées.</p>
 </div>
 <div class="paragraph">
-<p>Les bases de données graphe fournissent une performance de haut niveau pour des opérations en ligne en utilisant des structures de stockage dédiées aux noeuds et relations. Elles ne doivent pas calculer les relations (JOINS) au moment de la requête mais les enregistre efficacement comme part entière de votre donnée.</p>
+<p>Les bases de données graphe fournissent une performance de haut niveau pour des opérations en ligne en utilisant des structures de stockage dédiées aux noeuds et relations. Elles ne doivent pas calculer les relations (JOINTURES) au moment de la requête mais les enregistrent efficacement comme part entière de votre donnée.</p>
 </div>
 <div class="paragraph">
 <p>Prenons un cas d&#8217;usage classique, où des utilisateurs suivent d&#8217;autres utilisateurs.</p>
@@ -570,7 +570,7 @@ MERGE
 </table>
 </div>
 <div class="paragraph">
-<p>Cypher est avant-tout orienté motifs, signifiant que vous décrivez une représentation visuelle que vous avez déjà vu en texte (ASCii-art). Il utilise les parenthèses pour définir les noeuds (comme <strong>(u:User)</strong>) et des flèches (comme <strong>-&#8594;</strong> ou <strong>-[:SUIT]&#8594;</strong> ) pour les relations.</p>
+<p>Cypher est avant-tout orienté motifs, signifiant que vous décrivez une représentation visuelle que vous avez déjà vues en texte (ASCii-art). Il utilise les parenthèses pour définir les noeuds (comme <strong>(u:User)</strong>) et des flèches (comme <strong>-&#8594;</strong> ou <strong>-[:SUIT]&#8594;</strong> ) pour les relations.</p>
 </div>
 <div class="paragraph">
 <p>En regardant le dernier graphes des utilisateurs, une requête demandant de retrouver Hannah Hilpert et les utilisateurs la suivant peut être écrite de la façon suivante :</p>
@@ -587,7 +587,7 @@ RETURN user, follower</code></pre>
 <h2 id="_quelques_notions_de_franglais">Quelques notions de Franglais</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>La communauté Neo4j est magnifique, composée de personnes vraiment très compétentes et super sympathiques. Beaucoup de resources sont disponibles sur Internet mais peu malheureusement sont en Français.</p>
+<p>La communauté Neo4j est magnifique, composée de personnes vraiment très compétentes et super sympathiques. Beaucoup de ressources sont disponibles sur Internet mais peu malheureusement sont en Français.</p>
 </div>
 <div class="paragraph">
 <p>L&#8217;initiative de la traduction du manuel, dont je suis à l&#8217;origine, a pour l&#8217;instant été stoppée jusqu&#8217;à ce qu&#8217;un processus de traduction efficace soit mis en place.</p>
@@ -637,7 +637,7 @@ Path
 <h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Le but de ce billet était de titiller votre curiosité et de vous faire découvrir les bases de données graphe, et particulièrement Neo4j. Nous avons pu constater que le traitement de données connectées naturel dans un graphe et que vous pouvez avoir un aperçu direct de l&#8217;impact de ces relations.</p>
+<p>Le but de ce billet était de titiller votre curiosité et de vous faire découvrir les bases de données graphe, et particulièrement Neo4j. Nous avons pu constater que le traitement de données connectées est naturel dans un graphe et que vous pouvez avoir un aperçu direct de l&#8217;impact de ces relations.</p>
 </div>
 <div class="paragraph">
 <p>Je vous invite à consulter le net (ou attendre mon prochain billet) afin d&#8217;en savoir plus sur Neo4j et ces multiples cas d&#8217;usage.</p>
@@ -655,6 +655,18 @@ Path
 </li>
 <li>
 <p><a href="http://www.meetup.com/graphdb-lille/">Neo4j GraphDB Lille</a></p>
+</li>
+<li>
+<p><a href="http://www.meetup.com/graphdb-bordeaux/">Neo4j GraphDB Bordeaux</a></p>
+</li>
+<li>
+<p><a href="http://www.meetup.com/graphdb-toulouse/">Neo4j GraphDB Toulouse</a></p>
+</li>
+<li>
+<p><a href="http://www.meetup.com/graphdb-nantes/">Neo4j GraphDB Nantes</a></p>
+</li>
+<li>
+<p><a href="http://www.meetup.com/graphdb-montpellier/">Neo4j GraphDB Montpellier</a></p>
 </li>
 <li>
 <p><a href="http://www.meetup.com/graphdb-belgium/">Neo4j GraphDB Bruxelles</a></p>
@@ -695,7 +707,7 @@ Github
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2015-01-14 03:18:13 CET
+Last updated 2015-01-14 11:22:08 CET
 </div>
 </div>
 </body>

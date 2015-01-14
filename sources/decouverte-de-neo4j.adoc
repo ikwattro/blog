@@ -14,7 +14,7 @@ Les graphes business, graphes sociaux, graphes de connaissances, graphes d'inté
 
 Et ceci pour une bonne raison. Le modèle graphe vous offre une manière flexible de traiter les relations qui existent dans vos données. Et les bases de données graphes vous offrent une solution rapide et efficace pour stocker, retrouver et interroger ces données.
 
-http://neo4j.org[Neo4j], la base de données graphe la plus populaire, a prouvé son abilité à traiter de larges quantitiés de données ultra-connectées dans beaucoup de cas d'usage. Durant la dernière édition du http://graphconnect.com/[GraphConnect], des compagnies comme TomTom et Ebay's Shutlle ont démontré le gain que leur apporté l'adoption de Neo4j afin d'offrir une expérience utilisateur unique à leurs clients ou editer des mappings de cartographie.
+http://neo4j.org[Neo4j], la base de données graphe la plus populaire, a prouvé son abilité à traiter de larges quantitiés de données ultra-connectées dans beaucoup de cas d'usage. Durant la dernière édition du http://graphconnect.com/[GraphConnect], des compagnies comme TomTom et Ebay's Shutlle ont démontré le gain que leur apportait l'adoption de Neo4j afin d'offrir une expérience utilisateur unique à leurs clients ou editer des mappings de cartographie.
 
 Neo4j est développé et supporté par *Neo Technology*, une startup qui est devenue une société respectée dans le monde des bases de données.
 
@@ -28,7 +28,7 @@ image::../_images/graphe.png[Un graphe]
 
 Une base de données graphe est une base de données optimisée pour les opérations sur les données connectées.
 
-Les bases de données graphe fournissent une performance de haut niveau pour des opérations en ligne en utilisant des structures de stockage dédiées aux noeuds et relations. Elles ne doivent pas calculer les relations (JOINS) au moment de la requête mais les enregistre efficacement comme part entière de votre donnée.
+Les bases de données graphe fournissent une performance de haut niveau pour des opérations en ligne en utilisant des structures de stockage dédiées aux noeuds et relations. Elles ne doivent pas calculer les relations (JOINTURES) au moment de la requête mais les enregistrent efficacement comme part entière de votre donnée.
 
 Prenons un cas d'usage classique, où des utilisateurs suivent d'autres utilisateurs.
 
@@ -61,7 +61,7 @@ RETURN:: Retourne un résultat de requête sous la forme demandée, valeurs scal
 CREATE:: Crée des éléments de graphe (noeuds ou relations) avec les libellés et propriétés.
 MERGE:: Trouve ou crée des motifs. C'est une combinaison de MATCH et CREATE.
 
-Cypher est avant-tout orienté motifs, signifiant que vous décrivez une représentation visuelle que vous avez déjà vu en texte (ASCii-art). Il utilise les parenthèses pour définir les noeuds (comme *(u:User)*) et des flèches (comme *-->* ou *-[:SUIT]->* ) pour les relations.
+Cypher est avant-tout orienté motifs, signifiant que vous décrivez une représentation visuelle que vous avez déjà vues en texte (ASCii-art). Il utilise les parenthèses pour définir les noeuds (comme *(u:User)*) et des flèches (comme *-->* ou *-[:SUIT]->* ) pour les relations.
 
 En regardant le dernier graphes des utilisateurs, une requête demandant de retrouver Hannah Hilpert et les utilisateurs la suivant peut être écrite de la façon suivante :
 
@@ -74,7 +74,7 @@ RETURN user, follower
 
 == Quelques notions de Franglais
 
-La communauté Neo4j est magnifique, composée de personnes vraiment très compétentes et super sympathiques. Beaucoup de resources sont disponibles sur Internet mais peu malheureusement sont en Français.
+La communauté Neo4j est magnifique, composée de personnes vraiment très compétentes et super sympathiques. Beaucoup de ressources sont disponibles sur Internet mais peu malheureusement sont en Français.
 
 L'initiative de la traduction du manuel, dont je suis à l'origine, a pour l'instant été stoppée jusqu'à ce qu'un processus de traduction efficace soit mis en place.
 
@@ -88,7 +88,7 @@ Path:: Chemin comprenant une collection de noeuds et de relations entre deux noe
 
 == Conclusion
 
-Le but de ce billet était de titiller votre curiosité et de vous faire découvrir les bases de données graphe, et particulièrement Neo4j. Nous avons pu constater que le traitement de données connectées naturel dans un graphe et que vous pouvez avoir un aperçu direct de l'impact de ces relations.
+Le but de ce billet était de titiller votre curiosité et de vous faire découvrir les bases de données graphe, et particulièrement Neo4j. Nous avons pu constater que le traitement de données connectées est naturel dans un graphe et que vous pouvez avoir un aperçu direct de l'impact de ces relations.
 
 Je vous invite à consulter le net (ou attendre mon prochain billet) afin d'en savoir plus sur Neo4j et ces multiples cas d'usage.
 
@@ -97,6 +97,10 @@ J'en profite aussi pour vous inviter à assister à un de nos nombreux meetups e
 * link:http://www.meetup.com/graphdb-france/[Neo4j GraphDB Paris]
 * link:http://www.meetup.com/graphdb-Lyon/[Neo4j GraphDB Lyon]
 * link:http://www.meetup.com/graphdb-lille/[Neo4j GraphDB Lille]
+* link:http://www.meetup.com/graphdb-bordeaux/[Neo4j GraphDB Bordeaux]
+* link:http://www.meetup.com/graphdb-toulouse/[Neo4j GraphDB Toulouse]
+* link:http://www.meetup.com/graphdb-nantes/[Neo4j GraphDB Nantes]
+* link:http://www.meetup.com/graphdb-montpellier/[Neo4j GraphDB Montpellier]
 * link:http://www.meetup.com/graphdb-belgium/[Neo4j GraphDB Bruxelles]
 
 Merci pour votre lecture, et je vous dis à bientôt.
