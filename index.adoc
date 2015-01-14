@@ -4,5 +4,5 @@ I'm not solving problems, I'm experiencing new realities...
 
 == Latest articles | Derniers articles
 
-link:html/decouverte-de-neo4j.html[Découverte de Neo4j]
+link:articles/decouverte-de-neo4j.html[Découverte de Neo4j, la base de données graphe]
 
