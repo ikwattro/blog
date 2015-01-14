@@ -22,6 +22,8 @@ Neo4j est développé et supporté par *Neo Technology*, une startup qui est dev
 
 Un graphe est une structure de données générique, composée de noeuds (entités) reliées par des relations. Dans le modèle de graphe à propriétés, chaque noeud et relation peut être libellée et contenir plusieurs propriétés les décrivant.
 
+image::../_images/graphe.png[Un graphe]
+
 == Qu'est-ce qu'une base de données graphe ?
 
 Une base de données graphe est une base de données optimisée pour les opérations sur les données connectées.
