@@ -1,28 +1,8 @@
 = Christophe Willemsen
-Doc Writer <chris@neoxygen.io>
- :homepage: http://blog.neoxygen.io[http://blog.neoxygen.io]
 
-== A blog about http://neo4j.org[neo4j] and http://php.net[php]
+A blog about Neo4j and PHP
 
----
+== Latest articles | Derniers articles
 
-=== Latest articles
+link:html/decouverte-de-neo4j.html[Découverte de Neo4j]
 
-link:html/journey-in-the-heart-of-graphgen.html[Journey in the heart of Graphgen]
-
-[source,php]
-.index.php
-----
-<?php
-
-$client = ClientBuilder::create()
-  ->addDefaultLocalConnection()
-  ->build();
-----
-
-[source,cypher]
-.create.cypher
-----
-MATCH (n:User {id: {id}})
-RETURN n
-----

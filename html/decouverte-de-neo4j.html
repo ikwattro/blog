@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.1">
-<title>Christophe Willemsen</title>
+<title>Découverte de Neo4j</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic|Noto+Serif:400,400italic,700,700italic|Droid+Sans+Mono:400">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -411,28 +411,63 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1>Christophe Willemsen</h1>
+<h1>Découverte de Neo4j</h1>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A blog about Neo4j and PHP</p>
+<p>Les bases de données graphe sont maintenant au coeur des piles technologiques utilisées par les entreprises traitant des données hautement connectées.</p>
+</div>
+<div class="paragraph">
+<p>Les graphes business, graphes sociaux, graphes de connaissances, graphes d&#8217;intérêts et graphes de médias sont des termes quotidiennement retrouvés dans les nouvelles technologiques.</p>
+</div>
+<div class="paragraph">
+<p>Et ceci pour une bonne raison. Le modèle graphe vous offre une manière flexible de traiter les relations qui existent dans vos données. Et les bases de données graphes vous offrent une solution rapide et efficace pour stocker, retrouver et interroger ces données.</p>
+</div>
+<div class="paragraph">
+<p><a href="http://neo4j.org">Neo4j</a>, la base de données graphe la plus populaire, a prouvé son abilité à traiter de larges quantitiés de données ultra-connectées dans beaucoup de cas d&#8217;usage. Durant la dernière édition du <a href="http://graphconnect.com/">GraphConnect</a>, des compagnies comme TomTom et Ebay&#8217;s Shutlle ont démontré le gain que leur apporté l&#8217;adoption de Neo4j afin d&#8217;offrir une expérience utilisateur unique à leurs clients ou editer des mappings de cartographie.</p>
+</div>
+<div class="paragraph">
+<p>Neo4j est développé et supporté par <strong>Neo Technology</strong>, une startup qui est devenue une société respectée dans le monde des bases de données.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_latest_articles_derniers_articles">Latest articles | Derniers articles</h2>
+<h2 id="_qu_est_ce_qu_un_graphe">Qu&#8217;est-ce qu&#8217;un graphe ?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="html/decouverte-de-neo4j.html">Découverte de Neo4j</a></p>
+<p>Un graphe est une structure de données générique, composée de noeuds (entités) reliées par des relations. Dans le modèle de graphe à propriétés, chaque noeud et relation peut être libellée et contenir plusieurs propriétés les décrivant.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_qu_est_ce_qu_une_base_de_données_graphe">Qu&#8217;est-ce qu&#8217;une base de données graphe ?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Une base de données graphe est une base de données optimisée pour les opérations sur les données connectées.</p>
+</div>
+<div class="paragraph">
+<p>Les bases de données graphe fournissent une performance de haut niveau pour des opérations en ligne en utilisant des structures de stockage dédiées aux noeuds et relations. Elles ne doivent pas calculer les relations (JOINS) au moment de la requête mais les enregistre efficacement comme part entière de votre donnée.</p>
+</div>
+<div class="paragraph">
+<p>Prenons un cas d&#8217;usage classique, où des utilisateurs suivent d&#8217;autres utilisateurs.</p>
+</div>
+<div class="paragraph">
+<p>Un utilisateur sera représentée par un <strong>noeud</strong> et peut avoir un libellé (Label) et des propriétés. Les libellés peuvent servir à définir les différents rôles de vos noeuds.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/user_node.png" alt="Un noeud utilisateur">
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-01-14 01:56:28 CET
+Last updated 2015-01-14 02:24:31 CET
 </div>
 </div>
 </body>
