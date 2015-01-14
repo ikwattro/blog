@@ -32,7 +32,7 @@ Les bases de données graphe fournissent une performance de haut niveau pour des
 
 Prenons un cas d'usage classique, où des utilisateurs suivent d'autres utilisateurs.
 
-Un utilisateur sera représentée par un *noeud* et peut avoir un libellé (Label) et des propriétés. Les libellés peuvent servir à définir les différents rôles de vos noeuds.
+Un utilisateur sera représentée par un *noeud* et peut avoir un libellé et des propriétés. Les libellés peuvent servir à définir les différents rôles de vos noeuds.
 
 image::../_images/user_node.png[Un noeud utilisateur]
 
@@ -84,7 +84,7 @@ Afin donc de ne pas vous perdre sur la toile, voici quelques notions Français =
 Noeud:: *Node* Représentant une entité dans votre graphe
 Libellé:: *Label* Permet de grouper les noeuds par utilisation, par exemple les labels User, Person, Category, Color, ...
 Type:: *Type* de la relation, permet d'ajouter un sens à vos relations, par exemple :CONNAIS, :SUIT, :TRAVAILLE_CHEZ, :AIME_PRODUIT
-Path:: Chemin comprenant une collection de noeuds et de relations entre deux noeuds
+Chemin:: *Path* Séquence de noeuds et de relations entre deux points du graphe
 
 == Conclusion
 
