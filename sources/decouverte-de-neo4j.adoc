@@ -148,8 +148,3 @@ Merci pour votre lecture, et je vous dis à bientôt.
 
 Vous avez trouvé une faute ? N'hésitez pas à me le signaler ou en la corrigeant https://github.com/ikwattro/blog/blob/master/sources/decouverte-de-neo4j.adoc[ici].
 
----
-
-[horizontal]
-Twitter:: https://twitter.com/ikwattro
-Github:: https://github.com/ikwattro
