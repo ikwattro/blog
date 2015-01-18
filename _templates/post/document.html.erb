@@ -94,14 +94,17 @@ end
 </head>
 <body<%= @id && %( id="#{@id}") %> class="<%= [(attr :doctype),((attr? 'toc-class') && (attr? :toc) && (attr? 'toc-placement', 'auto') ? %(#{attr 'toc-class'} toc-#{attr 'toc-position', 'left'}) : nil)].compact * ' ' %>"<%= (attr? 'max-width') ? %( style="max-width: #{attr 'max-width'};") : nil %>><%
 unless noheader %>
-<div id="header"><%
+<div id="header">
+<div class="details"><p><a href="http://chris.neoxygen.io" alt="Retour à l'accueil">Accueil</a></p></div>
+<%
   if doctype == 'manpage' %>
 <h1><%= doctitle %> Manual Page</h1><%
     if (attr? :toc) && (attr? 'toc-placement', 'auto') %>
 <div id="toc" class="<%= attr 'toc-class', 'toc' %>">
 <div id="toctitle"><%= attr 'toc-title' %></div>
 <%= converter.convert self, 'outline' %>
-</div><%
+</div>
+<%
     end %>
 <h2><%= attr 'manname-title' %></h2>
 <div class="sectionbody">

@@ -3,6 +3,8 @@ Christophe Willemsen <chris@neoxygen.io>
 v1.1, 14-01-2015
 :toc:
 :homepage: http://chris.neoxygen.io
+:description: Découverte de Neo4j, la base de données graphe. Vous découvrirez ce qu'est un graphe, ce qu'est une base de données graphe et comment neo4j peut vous aider à traiter des données hautement connectées
+:keywords: neo4j, cypher, base de données, graphe, réseau, social, recommendation
 
 link:../index.html[Retour à l'accueil du site]
 

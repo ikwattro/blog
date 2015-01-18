@@ -1,4 +1,6 @@
 = Christophe Willemsen
+:description: Resources et tutoriels en français à propos de PHP et Neo4j, la base de données graphe
+:keywords: neo4j, graphe, base de données, cypher, load csv, php, java
 
 I'm not solving problems, I'm experiencing new realities...
 
