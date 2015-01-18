@@ -152,18 +152,32 @@ unless noheader %>
 end %>
 <div id="content">
 <%= content %>
-</div><%
+
+<div id="no-comment" class="sect1">
+<div class="paragraph">
+<p>Arghh il n'y a pas de systèmes de commentaires ! Je sais je pourrais facilement ajouter un bloc disqus ou similaire, mais afin de ne
+pas devoir regarder partout à la fois, je vous propose de poser vos questions sur le <a href="https://groups.google.com/forum/#!forum/neo4jfr">Forum Neo4j FR</a>
+ou sur StackOverflow en taggant votre question avec "neo4j".</p>
+<p>Si vous avez aimé mon billet, n'hésitez pas à le partager sur la toile.</p>
+</div>
+</div>
+
+</div>
+
+<%
 unless !footnotes? || attr?(:nofootnotes) %>
 <div id="footnotes">
 <hr><%
   footnotes.each do |fn| %>
 <div class="footnote" id="_footnote_<%= fn.index %>">
 <a href="#_footnoteref_<%= fn.index %>"><%= fn.index %></a>. <%= fn.text %>
-</div><%
+</div>
+<%
   end %>
 </div><%
 end %><%
 unless nofooter %>
+
 
 <div id="footer">
 <div id="footer-text"><%
