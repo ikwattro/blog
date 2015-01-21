@@ -1,0 +1,16 @@
+= Installation et premiers pas
+Christophe Willemsen <chris@neoxygen.io>
+v1.0, 18-01-2015
+:toc:
+:homepage: http://chris.neoxygen.io
+:description: Installation de Neo4j, premiers pas avec le navigateur de base de données graphe, le shell console et vos premières requêtes Cypher
+:keywords: neo4j, cypher, base de données, graphe, console, webadmin, browser, navigateur
+
+== Introduction
+
+Après mon article "link:articles/decouverte-de-neo4j.html[Découverte de Neo4j, la base de données graphe]", je vous propose de manipuler
+votre premier graphe.
+
+Nous commencerons par le téléchargement et l'installation de **Neo4j**, l'élaboration des outils nativement disponibles pour accéder à votre base de données et
+nous créerons notre premier graphe ce qui entraînera l'apprentissage de quelques requêtes **Cypher**.
+

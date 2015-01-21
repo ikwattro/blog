@@ -4,10 +4,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="generator" content="Asciidoctor 1.5.1">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Découverte de Neo4j, la base de données graphe. Vous découvrirez ce qu'est un graphe, ce qu'est une base de données graphe et comment neo4j peut vous aider à traiter des données hautement connectées">
-<meta name="keywords" content="neo4j, cypher, base de données, graphe, réseau, social, recommendation">
+<meta name="description" content="Installation de Neo4j, premiers pas avec le navigateur de base de données graphe, le shell console et vos premières requêtes Cypher">
+<meta name="keywords" content="neo4j, cypher, base de données, graphe, console, webadmin, browser, navigateur">
 <meta name="author" content="Christophe Willemsen">
-<title>Découverte de Neo4j, la base de données graphe</title>
+<title>Installation et premiers pas</title>
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
 /* Remove the comments around the @import statement below when using this as a custom stylesheet */
@@ -425,28 +425,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <div class="details"><p><a href="http://chris.neoxygen.io" alt="Retour à l'accueil">Accueil</a></p></div>
 
-<h1>Découverte de Neo4j, la base de données graphe</h1>
+<h1>Installation et premiers pas</h1>
 <div class="details">
 <span id="author" class="author">Christophe Willemsen</span><br>
 <span id="email" class="email"><a href="mailto:chris@neoxygen.io">chris@neoxygen.io</a></span><br>
-<span id="revnumber">version 1.1,</span>
-<span id="revdate">14-01-2015</span>
+<span id="revnumber">version 1.0,</span>
+<span id="revdate">18-01-2015</span>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#_introduction">Introduction</a></li>
-<li><a href="#_qu_est_ce_qu_un_graphe">Qu&#8217;est-ce qu&#8217;un graphe ?</a></li>
-<li><a href="#_qu_est_ce_qu_une_base_de_données_graphe">Qu&#8217;est-ce qu&#8217;une base de données graphe ?</a></li>
-<li><a href="#_cypher_le_langage_de_requêtes_neo4j">Cypher, le langage de requêtes Neo4j</a></li>
-<li><a href="#_quelques_notions_de_franglais">Quelques notions de Franglais</a></li>
-<li><a href="#_cas_d_usages_classiques">Cas d&#8217;usages classiques</a>
-<ul class="sectlevel2">
-<li><a href="#_1_recommandation_de_produits">1. Recommandation de produits</a></li>
-<li><a href="#_2_analyse_d_impact_réseau">2. Analyse d&#8217;impact réseau</a></li>
-</ul>
-</li>
-<li><a href="#_conclusion">Conclusion</a></li>
 </ul>
 </div>
 </div>
@@ -455,315 +444,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Les bases de données graphe sont maintenant au coeur des piles technologiques utilisées par les entreprises traitant des données hautement connectées.</p>
+<p>Après mon article "<a href="articles/decouverte-de-neo4j.html">Découverte de Neo4j, la base de données graphe</a>", je vous propose de manipuler
+votre premier graphe.</p>
 </div>
 <div class="paragraph">
-<p>Les graphes business, graphes sociaux, graphes de connaissances, graphes d&#8217;intérêts et graphes de médias sont des termes quotidiennement retrouvés dans les nouvelles technologiques.</p>
-</div>
-<div class="paragraph">
-<p>Et ceci pour une bonne raison. Le modèle graphe vous offre une manière flexible de traiter les relations qui existent dans vos données. Et les bases de données graphes vous offrent une solution rapide et efficace pour stocker, retrouver et interroger ces données.</p>
-</div>
-<div class="paragraph">
-<p><a href="http://neo4j.org">Neo4j</a>, la base de données graphe la plus populaire, a prouvé son abilité à traiter de larges quantitiés de données ultra-connectées dans beaucoup de cas d&#8217;usage. Durant la dernière édition du <a href="http://graphconnect.com/">GraphConnect</a>, des compagnies comme TomTom et Ebay&#8217;s Shutlle ont démontré le gain que leur apportait l&#8217;adoption de Neo4j afin d&#8217;offrir une expérience utilisateur unique à leurs clients ou editer des mappings de cartographie.</p>
-</div>
-<div class="paragraph">
-<p>Neo4j est développé et supporté par <strong>Neo Technology</strong>, une startup qui est devenue une société respectée dans le monde des bases de données.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_qu_est_ce_qu_un_graphe">Qu&#8217;est-ce qu&#8217;un graphe ?</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Un graphe est une structure de données générique, composée de noeuds (entités) reliées par des relations. Dans le modèle de graphe à propriétés, chaque noeud et relation peut être libellée et contenir plusieurs propriétés les décrivant.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../_images/graphe.png" alt="Un graphe">
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_qu_est_ce_qu_une_base_de_données_graphe">Qu&#8217;est-ce qu&#8217;une base de données graphe ?</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Une base de données graphe est une base de données optimisée pour les opérations sur les données connectées.</p>
-</div>
-<div class="paragraph">
-<p>Les bases de données graphe fournissent une performance de haut niveau pour des opérations en ligne en utilisant des structures de stockage dédiées aux noeuds et relations. Elles ne doivent pas calculer les relations (JOINTURES) au moment de la requête mais les enregistrent efficacement comme part entière de votre donnée.</p>
-</div>
-<div class="paragraph">
-<p>Prenons un cas d&#8217;usage classique, où des utilisateurs suivent d&#8217;autres utilisateurs.</p>
-</div>
-<div class="paragraph">
-<p>Un utilisateur sera représentée par un <strong>noeud</strong> et peut avoir un libellé et des propriétés. Les libellés peuvent servir à définir les différents rôles de vos noeuds.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../_images/user_node.png" alt="Un noeud utilisateur">
-</div>
-</div>
-<div class="paragraph">
-<p>Le lien entre ces deux utilisateurs sera représenté par une <strong>Relation</strong>, qui peut également avoir des propriétés et un <strong>type</strong> représentant la nature de cette relation. Les relations ajoutent une signification sémantique à vos données.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../_images/relation.png" alt="Une relation">
-</div>
-</div>
-<div class="paragraph">
-<p>En analysant le graphe, nous pouvons nous rendre compte qu&#8217;il est naturel de représenter nos données dans un graphe et de l&#8217;enregistrer dans une base de données graphe.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../_images/relation2.png" alt="Des relations">
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_cypher_le_langage_de_requêtes_neo4j">Cypher, le langage de requêtes Neo4j</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Requêter un graphe peut sembler difficile au premier abord. Afin de simplifier ce processus, Neo4j a développé Cypher, un langage de requêtes déclaratif orienté graphes, optimisé pour la lisibilité and la facilité d&#8217;expression humaine pour les développeurs, administrateurs et les experts de domaines.</p>
-</div>
-<div class="paragraph">
-<p>Etant déclaratif, Cypher se tourne sur l&#8217;expression de demander <strong>que</strong> retrouver dans le graphe et non <strong>comment</strong> le retrouver.</p>
-</div>
-<div class="paragraph">
-<p>Le langage se compose de plusieurs clauses distinctes. Vous pouvez en apprendre d&#8217;avantage dans le <a href="http://neo4j.com/docs/stable/">manuel Neo4j</a>.</p>
-</div>
-<div class="paragraph">
-<p>Voici une liste non-exhaustive des clauses quotidiennement utilisées pour lire et mettre à jour le graphe :</p>
-</div>
-<div class="hdlist">
-<table>
-<tr>
-<td class="hdlist1">
-MATCH
-</td>
-<td class="hdlist2">
-<p>Trouve un "exemple" de motif que vous définissez dans le graphe.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-WHERE
-</td>
-<td class="hdlist2">
-<p>Filtre les résultats avec des prédicats, comme en SQL. Il y a beaucoup de prédicats en Cypher cependants, incluant les opérations de collection et les <strong>MATCH</strong> de graphes.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-RETURN
-</td>
-<td class="hdlist2">
-<p>Retourne un résultat de requête sous la forme demandée, valeurs scalaires, éléments de graph, chemins, collections ou même documents.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-CREATE
-</td>
-<td class="hdlist2">
-<p>Crée des éléments de graphe (noeuds ou relations) avec les libellés et propriétés.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-MERGE
-</td>
-<td class="hdlist2">
-<p>Trouve ou crée des motifs. C&#8217;est une combinaison de MATCH et CREATE.</p>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Cypher est avant-tout orienté motifs, signifiant que vous décrivez une représentation visuelle que vous avez déjà vues en texte (ASCii-art). Il utilise les parenthèses pour définir les noeuds (comme <strong>(u:User)</strong>) et des flèches (comme <strong>-&#8594;</strong> ou <strong>-[:SUIT]&#8594;</strong> ) pour les relations.</p>
-</div>
-<div class="paragraph">
-<p>En regardant le dernier graphes des utilisateurs, une requête demandant de retrouver Hannah Hilpert et les utilisateurs la suivant peut être écrite de la façon suivante :</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (user:User {name:'Hannah Hilpert'})&lt;-[:FOLLOWS]-(follower)
-RETURN user, follower</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_quelques_notions_de_franglais">Quelques notions de Franglais</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>La communauté Neo4j est magnifique, composée de personnes vraiment très compétentes et super sympathiques. Beaucoup de ressources sont disponibles sur Internet mais peu malheureusement sont en Français.</p>
-</div>
-<div class="paragraph">
-<p>L&#8217;initiative de la traduction du manuel, dont je suis à l&#8217;origine, a pour l&#8217;instant été stoppée jusqu&#8217;à ce qu&#8217;un processus de traduction efficace soit mis en place.</p>
-</div>
-<div class="paragraph">
-<p>Afin donc de ne pas vous perdre sur la toile, voici quelques notions Français &#8658; Anglais qui pourront vous être utiles afin de trouver des informations sur le net.</p>
-</div>
-<div class="hdlist">
-<table>
-<tr>
-<td class="hdlist1">
-Noeud
-</td>
-<td class="hdlist2">
-<p><strong>Node</strong> Représentant une entité dans votre graphe</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-Libellé
-</td>
-<td class="hdlist2">
-<p><strong>Label</strong> Permet de grouper les noeuds par utilisation, par exemple les labels User, Person, Category, Color, &#8230;&#8203;</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-Type
-</td>
-<td class="hdlist2">
-<p><strong>Type</strong> de la relation, permet d&#8217;ajouter un sens à vos relations, par exemple :CONNAIS, :SUIT, :TRAVAILLE_CHEZ, :AIME_PRODUIT</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-Chemin
-</td>
-<td class="hdlist2">
-<p><strong>Path</strong> Séquence de noeuds et de relations entre deux points du graphe</p>
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_cas_d_usages_classiques">Cas d&#8217;usages classiques</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_1_recommandation_de_produits">1. Recommandation de produits</h3>
-<div class="paragraph">
-<p>Dans l&#8217;exemple de modèle suivant, nous traçons l&#8217;achat de produits par des utilisateurs. Le schéma classique est</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Un noeud <strong>Personne</strong></p>
-</li>
-<li>
-<p>Un noeud <strong>Produit</strong></p>
-</li>
-<li>
-<p>Une relation <strong>:ACHETE</strong> entre Personne et Produit</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../_images/reco_produit.png" alt="Recommandation produits">
-</div>
-</div>
-<div class="paragraph">
-<p>Il suffit d&#8217;une simple visualisation du graphe pour s&#8217;apercevoir que Ambrose et Noemie ont acheté deux produits en commun. Nous pourrions donc recommander à Ambrose les autres produits que Noemie a acheté.</p>
-</div>
-<div class="paragraph">
-<p>Et en Cypher, il est tout aussi facile de le faire que de le dire :</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (ambrose:Personne {firstname:'Ambrose'})
-MATCH (noemie:Personne {firstname:'Noemie'})
-MATCH (ambrose)-[:ACHETE]-&gt;(produit:Produit)&lt;-[:ACHETE]-(noemie)-[:ACHETE]-&gt;(produit2)
-WHERE NOT (ambrose)-[:ACHETE]-&gt;(produit2)
-RETURN ambrose, produit2 as recommandations</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Le résultat suivant est retourné :</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../_images/reco_product_result.png" alt="Recommandation résultat">
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_2_analyse_d_impact_réseau">2. Analyse d&#8217;impact réseau</h3>
-<div class="paragraph">
-<p>Dans ce deuxième exemple, prenons un cas (simplifié) où des clients de service internet sont reliés à des routeurs qui eux sont reliés à des centrales.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="../_images/impact.png" alt="Analyse d'impact">
-</div>
-</div>
-<div class="paragraph">
-<p>Comme pour le cas précendent, visualiser le graphe ne vous demande aucun effort et cette <strong>visualisation en graphe vous permet de mieux comprendre vos données</strong>.</p>
-</div>
-<div class="paragraph">
-<p>Nous pouvons analyser directement quels clients seront touchés en cas de travaux ou une panne sur un des routeurs ou une centrale.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_conclusion">Conclusion</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Le but de ce billet était de titiller votre curiosité et de vous faire découvrir les bases de données graphe, et particulièrement Neo4j.
-Nous avons pu constater que le traitement de données connectées est naturel dans un graphe et que vous pouvez avoir un aperçu direct de l&#8217;impact de ces relations.</p>
-</div>
-<div class="paragraph">
-<p>Si vous avez hâte d&#8217;utiliser Neo4j, vous pouvez l&#8217;installer en version embarquée pour Java ou en version serveur disponible <a href="http://dist.neo4j.org/neo4j-community-2.1.6-unix.tar.gz">ici</a>. La version serveur propose une API ReST et vous trouverez un driver en fonction de votre langage de programmation sur <a href="http://neo4j.com/developer/language-guides/">cette page</a>.</p>
-</div>
-<div class="paragraph">
-<p>Vous pouvez consulter le net (ou attendre mon prochain billet) pour en découvrir d&#8217;avantage sur Neo4j et ces multiples cas d&#8217;usage.</p>
-</div>
-<div class="paragraph">
-<p>J&#8217;en profite aussi pour vous inviter à assister à un de nos nombreux meetups en France ou en Belgique dont voici la liste des liens :</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="http://www.meetup.com/graphdb-france/">Neo4j GraphDB Paris</a></p>
-</li>
-<li>
-<p><a href="http://www.meetup.com/graphdb-Lyon/">Neo4j GraphDB Lyon</a></p>
-</li>
-<li>
-<p><a href="http://www.meetup.com/graphdb-lille/">Neo4j GraphDB Lille</a></p>
-</li>
-<li>
-<p><a href="http://www.meetup.com/graphdb-bordeaux/">Neo4j GraphDB Bordeaux</a></p>
-</li>
-<li>
-<p><a href="http://www.meetup.com/graphdb-toulouse/">Neo4j GraphDB Toulouse</a></p>
-</li>
-<li>
-<p><a href="http://www.meetup.com/graphdb-nantes/">Neo4j GraphDB Nantes</a></p>
-</li>
-<li>
-<p><a href="http://www.meetup.com/graphdb-montpellier/">Neo4j GraphDB Montpellier</a></p>
-</li>
-<li>
-<p><a href="http://www.meetup.com/graphdb-belgium/">Neo4j GraphDB Bruxelles</a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Merci pour votre lecture, et je vous dis à bientôt.</p>
-</div>
-<hr>
-<div class="paragraph">
-<p>Vous avez trouvé une faute ? N&#8217;hésitez pas à me le signaler ou en la corrigeant <a href="https://github.com/ikwattro/blog/blob/master/sources/decouverte-de-neo4j.adoc">ici</a>.</p>
+<p>Nous commencerons par le téléchargement et l&#8217;installation de <strong>Neo4j</strong>, les outils nativement disponibles pour accéder à votre base de données et
+nous créerons notre premier graphe ce qui entraînera l&#8217;apprentissage de quelques requêtes <strong>Cypher</strong>.</p>
 </div>
 </div>
 </div>
@@ -784,8 +470,8 @@ ou sur StackOverflow en taggant votre question avec "neo4j".</p>
 
 <div id="footer">
 <div id="footer-text">
-Version 1.1<br>
-Last updated 2015-01-18 23:07:12 CET
+Version 1.0<br>
+Last updated 2015-01-18 23:16:11 CET
 &nbsp;|&nbsp;
 <a href="https://twitter.com/ikwattro" title="Follow me on Twitter" target="_blank" style="color:#fff;">Follow me on Twitter</a>
 &nbsp;|&nbsp;
