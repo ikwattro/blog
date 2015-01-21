@@ -1,0 +1,58 @@
+= Neo4j Belgian meetup on Graph Database Prototyping
+Christophe Willemsen <chris@neoxygen.io>
+v1.0, 21-01-2015
+:toc:
+:homepage: http://chris.neoxygen.io
+:keywords: neo4j, cypher, database, graph, console, graphgen, modelling
+
+== Introduction
+
+On January 21st the Neo4j belgian meetup took place in the beautiful city of Antwerp. I'll pass through the common starting words
+describing the venue and the atmosphere ( belgian beers are tasty and Rik is an awesome host, everybody knows it ! ).
+
+This was one of the most interesting meetups I did !
+
+Despite the various attendees levels, the choice of the Graph Database Prototyping topic was enjoying everybody.
+The introduction slides were reduced to the minimum and a lot of questions were already raised about modeling designs.
+
+Some common questions are :
+
+* When to use nodes
+* When to use properties
+* Is having a node with 1000 relationships is a good idea
+* Is it possible to have an index on relationship properties
+
+These are also questions we see on forums like StackOverflow.
+
+== Setting up the groups
+
+After the introduction, people were settled up in three groups of 5 people, and could make the choice of one problem like to
+solve with Neo4j and see how they can model it.
+
+Rik, Kees and I were dispatched at the tables to provide explanation and modeling tips.
+
+The fact that people were solving real problems they face everyday, you never loose their focus. They are concentrate, they
+try to understand you and are less shy to ask more questions and going deeper.
+
+Also the fact that they have to explain their problem or use-case, is a big effort for them, it is sometimes not easy to translate
+to words something that is logical in your brain since a couple of years.
+
+== The table workshop
+
+The use-case faced by the people at my table was interesting and can show that starting from a simple description can
+lead to the designing of a (big) data model.
+
+This is a suite of file converting processes. Each process use a converter, that has a converter version.
+The role of the converter is to merge multiple files in one and delivering a combined result.
+
+If the end user see that the combined result has some failures, the process needs to be marked as failed, and the backend
+administrator needs a way to identify which files were not merged correctly with which version of the converter.
+
+We ended up with the following model :
+
+image::../_images/model.svg
+
+
+
+
+
