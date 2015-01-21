@@ -6,5 +6,7 @@ I'm not solving problems, I'm experiencing new realities...
 
 == Latest articles | Derniers articles
 
+link::articles/neo4j-meetup-january-2015-belgium.adoc[Neo4j belgian meetup on Graph Database Prototyping]
+
 link:articles/decouverte-de-neo4j.html[Découverte de Neo4j, la base de données graphe]
 
