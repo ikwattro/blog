@@ -440,6 +440,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_the_merging_result_is_incorrect">The merging result is incorrect</a></li>
 <li><a href="#_finding_files_affected_by_the_failed_result">Finding files affected by the failed result</a></li>
+<li><a href="#_finding_the_version_of_the_converter_used">Finding the version of the converter used</a></li>
 </ul>
 </li>
 </ul>
@@ -583,6 +584,31 @@ Returned 3 rows in 59 ms</code></pre>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_finding_the_version_of_the_converter_used">Finding the version of the converter used</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (result:ProcessResult {id:"ec20aedd-1872-3f3b-aaf9-e12d4464a9c6"})&lt;-[:MERGING_RESULT]-(process)
+MATCH (process)-[:USES]-&gt;(converter)-[:CONVERTER_VERSION]-&gt;(version)
+RETURN version
+
+version
+version	7
+Returned 1 row in 64 ms</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see, this was not really difficult but people at the table were amazed at how the data looks natural in a graph
+and how easy it is to query the graph with Cypher.</p>
+</div>
+<div class="paragraph">
+<p>If you couldn&#8217;t attend the meetup or want to discover more of the Neo4j Graph Database, I invite you to come to a local meetup
+or to join us at FOSDEM'15 in Brussels on January 31st in the GraphDevRoom.</p>
+</div>
+<div class="paragraph">
+<p>Thanks for reading,</p>
+</div>
+</div>
 </div>
 </div>
 
@@ -603,7 +629,7 @@ ou sur StackOverflow en taggant votre question avec "neo4j".</p>
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2015-01-22 00:28:43 CET
+Last updated 2015-01-22 00:34:31 CET
 &nbsp;|&nbsp;
 <a href="https://twitter.com/ikwattro" title="Follow me on Twitter" target="_blank" style="color:#fff;">Follow me on Twitter</a>
 &nbsp;|&nbsp;
