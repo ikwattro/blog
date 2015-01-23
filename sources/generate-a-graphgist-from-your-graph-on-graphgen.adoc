@@ -29,22 +29,21 @@ Once generated you will see a new action button **Create Graphgist**
 image::../_images/ggg2.png[]
 
 Click on it and the setup of your graphgist document is done and all you need to do is to copy and paste it to a
-adoc file available publicly.
+adoc file and make it available on a public URL (dropbox, github-gist).
 
-image::../_images/ggg3.png[]
+image::../_images/ggg5.png[]
 
 == What's included ?
 
 * The setup of your graph
 * Some `node matching` queries based on labels
 * Some `node matching` queries based on node properties
-* Some `relationship matching` queries based on relationship types
+* Some `node and his relationships matching` queries based on relationship types
 * And some more nice queries
 
-NB: In order to avoid people copy/paste and submit to the challenge, there are some places where you need to remove some
-`-- CHANGE HERE -- strings.
 
-What is cool, is that without effort you can have a quick graphgist setup and concentrate on making it more beautiful :
+What is cool, is that without effort you can have a quick graphgist setup. So you have time to concentrate on modeling and describing it. And especially invest work in really good use-case queries for that domain :
+
 
 image::../_images/ggg4.png[]
 
