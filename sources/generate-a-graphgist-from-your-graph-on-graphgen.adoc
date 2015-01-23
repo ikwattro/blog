@@ -46,7 +46,7 @@ NB: In order to avoid people copy/paste and submit to the challenge, there are s
 
 What is cool, is that without effort you can have a quick graphgist setup and concentrate on making it more beautiful :
 
-image::../_images/ggg4.png
+image::../_images/ggg4.png[]
 
 I hope you will enjoy it and don't hesitate to ping me on Twitter for remarks, bugs or just saying me cheers !
 
