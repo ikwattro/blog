@@ -4,7 +4,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="generator" content="Asciidoctor 1.5.2">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Journey in the heart of Graphgen</title>
+<meta name="keywords" content="neo4j, cypher, database, graph, nodes, relationships, wikipedia, google, search">
+<meta name="author" content="Christophe Willemsen">
+<title>Neo4j 2.2 and matching paths on dense nodes</title>
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
 /* Remove the comments around the @import statement below when using this as a custom stylesheet */
@@ -422,83 +424,327 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <div class="details"><p><a href="http://chris.neoxygen.io" alt="Retour à l'accueil">Accueil</a></p></div>
 
-<h1>Journey in the heart of Graphgen</h1>
+<h1>Neo4j 2.2 and matching paths on dense nodes</h1>
+<div class="details">
+<span id="author" class="author">Christophe Willemsen</span><br>
+<span id="email" class="email"><a href="mailto:chris@neoxygen.io">chris@neoxygen.io</a></span><br>
+<span id="revnumber">version 1.0,</span>
+<span id="revdate">17-03-2015</span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_tldr">TLDR;</a></li>
+<li><a href="#_importing_the_dataset">Importing the dataset</a></li>
+<li><a href="#_analysing_the_data">Analysing the data</a></li>
+<li><a href="#_from_google_to_neo4j">From Google to Neo4j</a></li>
+<li><a href="#_conclusion">Conclusion</a></li>
+</ul>
+</div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_graphgen_internals_generation_and_import">Graphgen internals, generation and import</h2>
+<h2 id="_tldr">TLDR;</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A journey into the heart of Graphgen, the graph generation engine for Neo4j</p>
+<p>During the last weekend, I came up to a tweet announcing that Wikimedia released the dataset ot the pages clickstreams
+for the month of Feb 2015.</p>
 </div>
 <div class="paragraph">
-<p>To my surprise, sharing a simple command line tool screencast capable of generating a graph based on a user yaml schema file became to be a powerful online web application for generating graphs and importing them in a Neo4j graph database, this application is called Graphgen.</p>
+<p>Not that I had nothing to do but I found it interesting to download this dataset and see how people arrive on the Neo4j&#8217;s Wikipedia
+page.</p>
 </div>
 <div class="paragraph">
-<p>More features were implemented by the time, visualization of the graph, multiple format exports, integration with the neo4j console web application, and last but not least custom node models.</p>
+<p>The data is quite simple, you have pages entities that relates to other pages. Pages can be or a Wikipedia page or representing
+a non Wikipedia page like Google. Relationships can be or a user click from on wikipedia page to another or a user using a search
+box like Google search or the Wikipedia search feature. The number of types the event occurs is also part of the dataset.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_importing_the_dataset">Importing the dataset</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can download the dataset here : <a href="http://datahub.io/dataset/wikipedia-clickstream/resource/be85cc68-d1e6-4134-804a-fd36b94dbb82" class="bare">http://datahub.io/dataset/wikipedia-clickstream/resource/be85cc68-d1e6-4134-804a-fd36b94dbb82</a></p>
 </div>
 <div class="paragraph">
-<p>While the web application is a good deal for simple graphs, when you want to use it in consultancy for generating test graphs permitting a realistic load impact test you need more than the current limit of 1000 nodes restricted by the web application (mostly for the vizualisation). This is why using it as command line tool with Neogen is, for enterprise needs, the way to go.</p>
+<p>Importing the dataset is really straightforward and the code I used can be found on
+<a href="https://gist.github.com/ikwattro/acf99e7354bbb14b9c4f">this gist</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_analysing_the_data">Analysing the data</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We can start with simple queries like the pages from where people are clicking before landing on the Neo4j page :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (neo:Page {title:'Neo4j'})
+MATCH (neo)&lt;-[r:TARGET_BY_LINK]-(from)
+RETURN from.title, r.occurences
+
+NoSQL	282
+FlockDB	19
+Paxos_(computer_science)	22
+Cypher_Query_Language	19
+Graph_database	814
+List_of_AGPL_web_applications	11
+Spatial_database	25</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Most of the users using Graphgen are just playing with it, people using the command line tool or the most curious of you may want to understand how everything works and why a big refactoring of the library is currently in process.</p>
+<p>Or maybe in the second degree :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (neo:Page {title:'Neo4j'})
+MATCH p=(neo)&lt;-[:TARGET_BY_LINK*2..2]-(from)
+WHERE neo &lt;&gt; from
+RETURN extract(n in nodes(p) | n.title) as pages, reduce(x=0, r in rels(p) | x + r.occurences) as occ
+ORDER BY occ DESC
+
+Neo4j, Graph_database, NoSQL	1450
+Neo4j, Graph_database, Big_data	1045
+Neo4j, Graph_database, Graph_(abstract_data_type)	967
+Neo4j, Graph_database, Triplestore	897
+Neo4j, Graph_database, Network_model	882
+Neo4j, Graph_database, Nested_set_model	865
+Neo4j, Graph_database, Graph_theory	863
+Neo4j, Graph_database, DEX_(Graph_database)	856
+Neo4j, Graph_database, Graph_(mathematics)	856
+Neo4j, Graph_database, Cypher_Query_Language	852</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>How it works internally ? This part will provide a global overview of how everything is handled internally, starting from the schema you until the import into the database.</p>
+<p>So the NoSQL movement and the Graph ecosystem are the most common referers, which is not suprising.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_from_google_to_neo4j">From Google to Neo4j</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The last insight I wanted to find is, from Google Search on which page users land and then click on a link pointing to the
+Neo4j page.</p>
 </div>
 <div class="paragraph">
-<p>Schema Parsing  On the graphgen webapp, you can only define your schema in a Cypher like DSL, in the command line tool you can use also yaml file schema definitions and easily create your own parser for your own file format.</p>
+<p>The query seemed obvious to me and I expected really fast query times as I describe the whole pattern I want back and the page
+titles are indexed :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (neo:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
+MATCH (neo)&lt;-[:TARGET_BY_LINK]-(x)&lt;-[:TARGET_BY_SEARCH]-(google)
+RETURN x.title</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>The cypher parser is responsible for translating your patttern into a map representing your schema, in fact it will transform the cypher into the yaml format used in the cli tool, have keys for the defined nodes, relationships, properties assigned to relationships and nodes, amount of nodes and relationships cardinalities you desire.</p>
+<p>Unfortunately, this query took 24 seconds to return on my machine with a default 4GB heap settings for Neo4j.</p>
 </div>
 <div class="paragraph">
-<p>Building an internal GraphSchema This schema is then handled by a GraphSchemaBuilder that will create a Schema object used internally, having nodes and relationships definitions and (for the upcoming version of graphgen) will declare properties on nodes as indexed or unique, useful for generating for you the queries needed in order to update your neo4j schema constraints if you import your graph.</p>
+<p>My first reaction of course was to analyse the execution plan with the PROFILE keyword (yes I know that PROFILE can be run in the browser
+now but I just love little windows with black backgrounds :) )</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">neo4j-sh (?)$ PROFILE MATCH (neo:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
+&gt; MATCH (neo)&lt;-[:TARGET_BY_LINK]-(x)&lt;-[:TARGET_BY_SEARCH]-(google)
+&gt; RETURN x.title;
++---------------------------------+
+| x.title                         |
++---------------------------------+
+| "FlockDB"                       |
+| "Cypher_Query_Language"         |
+| "Spatial_database"              |
+| "List_of_AGPL_web_applications" |
+| "Graph_database"                |
++---------------------------------+
+5 rows
+36565 ms
+
+Compiler CYPHER 2.2
+
+Planner COST
+
+Projection
+  |
+  +Filter
+    |
+    +Expand(All)(0)
+      |
+      +Expand(All)(1)
+        |
+        +NodeIndexSeek
+
++----------------+---------------+---------+----------+-------------------------+--------------------------------------------------------------------+
+|       Operator | EstimatedRows |    Rows |   DbHits |             Identifiers |                                                              Other |
++----------------+---------------+---------+----------+-------------------------+--------------------------------------------------------------------+
+|     Projection |     0.0000025 |       5 |       10 | google, neo, x, x.title |                                                            x.title |
+|         Filter |     0.0000025 |       5 | 23174043 |          google, neo, x | (hasLabel(neo:Page) AND Property(neo,title(1)) == {  AUTOSTRING0}) |
+| Expand(All)(0) |           6.8 | 7724681 |  9857967 |          google, neo, x |                                       (x)-[:TARGET_BY_LINK]-&gt;(neo) |
+| Expand(All)(1) |           1.9 | 2133286 |  2133287 |               google, x |                                  (google)-[:TARGET_BY_SEARCH]-&gt;(x) |
+|  NodeIndexSeek |           1.0 |       1 |        2 |                  google |                                                       :Page(title) |
++----------------+---------------+---------+----------+-------------------------+--------------------------------------------------------------------+
+
+Total database accesses: 35165309</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Applying models The GraphSchema will then be passed to the Model Processor. This processor will check for each node definition if you have used a model (like Person, User) and assign the model properties on it without replacing the user defined properties. </p>
+<p>So why so much time and database accesses ? I was really enjoying the 2.2 release and the new cost based planner and it was like
+all that happiness was thrown away with what appeared to me to be a simple query.</p>
 </div>
 <div class="paragraph">
-<p>This is currently slightly hidden in Graphgen because of the refactoring and the ability in the future for the user to define their own models via the web app, but you can now try to type in Graphgen </p>
+<p>I tried different ways of doing the same query. Variable length paths, multiple relationships types etc&#8230;&#8203; without any performance
+improvement.</p>
 </div>
 <div class="paragraph">
-<p>(person:#Person:#User *30)</p>
+<p>I spoke about this behavior with my friend :linkhttp://twitter.com/mesirii[Michael] and he asked me to do change the query to this :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (neo:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
+MATCH (neo)&lt;-[:TARGET_BY_LINK]-(x)
+WHERE (x)&lt;-[:TARGET_BY_SEARCH]-(google)
+RETURN count(*);
+
+neo4j-sh (?)$ PROFILE MATCH (neo:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
+&gt; MATCH (neo)&lt;-[:TARGET_BY_LINK]-(x)
+&gt; WHERE (x)&lt;-[:TARGET_BY_SEARCH]-(google)
+&gt; RETURN count(*);
++----------+
+| count(*) |
++----------+
+| 5        |
++----------+
+1 row
+210 ms
+
+Compiler CYPHER 2.2
+
+Planner COST
+
+EagerAggregation
+  |
+  +SemiApply
+    |
+    +CartesianProduct
+    |  |
+    |  +NodeIndexSeek(0)
+    |  |
+    |  +Expand(All)
+    |     |
+    |     +NodeIndexSeek(1)
+    |
+    +Expand(Into)
+       |
+       +Argument
+
++------------------+---------------+------+--------+----------------+-----------------------------------+
+|         Operator | EstimatedRows | Rows | DbHits |    Identifiers |                             Other |
++------------------+---------------+------+--------+----------------+-----------------------------------+
+| EagerAggregation |           1.6 |    1 |      0 |       count(*) |                                   |
+|        SemiApply |           2.7 |    5 |      0 | google, neo, x |                                   |
+| CartesianProduct |           3.6 |    7 |      0 | google, neo, x |                                   |
+| NodeIndexSeek(0) |           1.0 |    1 |      2 |         google |                      :Page(title) |
+|      Expand(All) |           3.6 |    7 |      8 |         neo, x |      (neo)&lt;-[:TARGET_BY_LINK]-(x) |
+| NodeIndexSeek(1) |           1.0 |    1 |      2 |            neo |                      :Page(title) |
+|     Expand(Into) |     0.0000025 |    0 |     43 |      google, x | (google)-[:TARGET_BY_SEARCH]-&gt;(x) |
+|         Argument |           3.6 |    7 |      0 |      google, x |                                   |
++------------------+---------------+------+--------+----------------+-----------------------------------+
+
+Total database accesses: 55</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>and you’ll get 30 nodes with Person and User labels containing the following properties : _id, first_name, last_name, date_of_birth, email, password, …</p>
+<p>Wow, stunning, amazing, query returning results in 14ms as I expected in my first attempts. It looks like Cypher needs more hints
+than in the previous 2.1.x versions.</p>
 </div>
 <div class="paragraph">
-<p>Let’s build the graph ! The GraphProcessor. Once the schema build completed, it is time to generate our graph. </p>
+<p>NB: Note that the <strong>other-google</strong> Page node has more than 2 millions <em>TARGET_BY_SEARCH</em> outgoing relationships.</p>
 </div>
 <div class="paragraph">
-<p>This processor will start to look at the nodes definition, generating the amount of desired nodes, applying the fake data on the properties and grouping them by identifier in a map. An internal id is applied on the nodes and used as reference for the relationships between them.</p>
+<p>However I couldn&#8217;t accept it as a final solution. Mostly because such queries make summing the relationship properties not so
+user-friendly anymore.</p>
 </div>
 <div class="paragraph">
-<p>The relationships will then be processed, based on the start and end node id references, and the cardinality. 4 types of cardinalities may exist : 1..1, 1..n, n..n, n..1 , by default the n..n cardinality has a max percentage. </p>
+<p>Thanks again to Michael, he asked Neo4j internal team and their answer was the following :</p>
 </div>
 <div class="paragraph">
-<p>Each cardinality has its own handling method, which eases testing and the ability to extend the available cardinalities.</p>
+<p>The cost based planner only knows that a Page node has between 5 and 50000 relationships. So when planning it can&#8217;t decide at runtime.
+At planning time there is no individual nodes, only labels, relationships and properties so it actually does&#8217;nt know what the
+parameter is.</p>
 </div>
 <div class="paragraph">
-<p>The ability to define your own percentage is part of the refactoring and tested, it will be shipped with the next version of graphgen.</p>
+<p>So, if the <em>other-google</em> node would have between 5 and 50k nodes, the first query would behave as I expected.</p>
 </div>
 <div class="paragraph">
-<p>The processor will return you a big array containing nodes and relationships.</p>
+<p>The solution is to give again a hint to Cypher with the <strong>USING</strong> clause.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (page:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
+USING INDEX page:Page(title)
+MATCH (page)&lt;-[:TARGET_BY_LINK]-(x)&lt;-[:TARGET_BY_SEARCH]-(google)
+RETURN count(*);
+
+neo4j-sh (?)$ PROFILE MATCH (page:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
+&gt; USING INDEX page:Page(title)
+&gt; MATCH (page)&lt;-[:TARGET_BY_LINK]-(x)&lt;-[:TARGET_BY_SEARCH]-(google)
+&gt; RETURN count(*);
++----------+
+| count(*) |
++----------+
+| 5        |
++----------+
+1 row
+12 ms
+
+Compiler CYPHER 2.2
+
+Planner COST
+
+EagerAggregation
+  |
+  +Filter
+    |
+    +Expand(All)(0)
+      |
+      +Expand(All)(1)
+        |
+        +NodeIndexSeek
+
++------------------+---------------+------+--------+-----------------+--------------------------------------------------------------------------+
+|         Operator | EstimatedRows | Rows | DbHits |     Identifiers |                                                                    Other |
++------------------+---------------+------+--------+-----------------+--------------------------------------------------------------------------+
+| EagerAggregation |        0.0016 |    1 |      0 |        count(*) |                                                                          |
+|           Filter |     0.0000025 |    5 |     99 | google, page, x | (hasLabel(google:Page) AND Property(google,title(1)) == {  AUTOSTRING1}) |
+|   Expand(All)(0) |           6.8 |   33 |     40 | google, page, x |                                        (x)&lt;-[:TARGET_BY_SEARCH]-(google) |
+|   Expand(All)(1) |           3.6 |    7 |      8 |         page, x |                                            (page)&lt;-[:TARGET_BY_LINK]-(x) |
+|    NodeIndexSeek |           1.0 |    1 |      2 |            page |                                                             :Page(title) |
++------------------+---------------+------+--------+-----------------+--------------------------------------------------------------------------+
+
+Total database accesses: 149</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Converters</p>
+<p>And the query is done in 10ms !!!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In opposition to Neo4j2.1.x and the rule based planner, giving more hints to Cypher is now the way to go. I&#8217;m happy to see such performances
+and I&#8217;m looking forward to discover more tips like this.</p>
 </div>
 <div class="paragraph">
-<p>There are multiple converters available for this array.</p>
+<p>Thanks again to Michael and the Neo4j team for the quick reply and to the amazing Neo4j community in general.</p>
 </div>
 <div class="paragraph">
-<p>On graphgen we use a GraphJson converter for the visualization, that will format each node and relationship to be in a displayable format for AlchemyJS and also will assign colors to node types.</p>
-</div>
-<div class="paragraph">
-<p>The StandardCypherConverter will create for each node and relationship a Cypher statement, this converter is used when you ask for the Cypher export format and download this export as a file. You can use the content of this file to populate your own Neo4j database with the neo4j-shell.</p>
-</div>
-<div class="paragraph">
-<p>The CypherStatementsConverter is used when you want to populate your neo4j database directly from Graphgen. It uses an optimized import query to speed up the import and importing a graph of max 1000 nodes is almost done immediately.</p>
+<p>Chris</p>
 </div>
 </div>
 </div>
@@ -519,7 +765,8 @@ ou sur StackOverflow en taggant votre question avec "neo4j".</p>
 
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-03-17 20:24:12 CET
+Version 1.0<br>
+Last updated 2015-03-17 23:05:51 CET
 &nbsp;|&nbsp;
 <a href="https://twitter.com/ikwattro" title="Follow me on Twitter" target="_blank" style="color:#fff;">Follow me on Twitter</a>
 &nbsp;|&nbsp;

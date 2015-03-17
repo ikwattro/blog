@@ -1,0 +1,268 @@
+= Neo4j 2.2 and matching paths on dense nodes
+Christophe Willemsen <chris@neoxygen.io>
+v1.0, 17-03-2015
+:toc:
+:homepage: http://chris.neoxygen.io
+:keywords: neo4j, cypher, database, graph, nodes, relationships, wikipedia, google, search
+
+== TLDR;
+
+During the last weekend, I came up to a tweet announcing that Wikimedia released the dataset ot the pages clickstreams
+for the month of Feb 2015.
+
+Not that I had nothing to do but I found it interesting to download this dataset and see how people arrive on the Neo4j's Wikipedia
+page.
+
+The data is quite simple, you have pages entities that relates to other pages. Pages can be or a Wikipedia page or representing
+a non Wikipedia page like Google. Relationships can be or a user click from on wikipedia page to another or a user using a search
+box like Google search or the Wikipedia search feature. The number of types the event occurs is also part of the dataset.
+
+== Importing the dataset
+
+You can download the dataset here : http://datahub.io/dataset/wikipedia-clickstream/resource/be85cc68-d1e6-4134-804a-fd36b94dbb82
+
+Importing the dataset is really straightforward and the code I used can be found on
+link:https://gist.github.com/ikwattro/acf99e7354bbb14b9c4f[this gist].
+
+== Analysing the data
+
+We can start with simple queries like the pages from where people are clicking before landing on the Neo4j page :
+
+[source,cypher]
+----
+MATCH (neo:Page {title:'Neo4j'})
+MATCH (neo)<-[r:TARGET_BY_LINK]-(from)
+RETURN from.title, r.occurences
+
+NoSQL	282
+FlockDB	19
+Paxos_(computer_science)	22
+Cypher_Query_Language	19
+Graph_database	814
+List_of_AGPL_web_applications	11
+Spatial_database	25
+----
+
+Or maybe in the second degree :
+
+[source,cypher]
+----
+MATCH (neo:Page {title:'Neo4j'})
+MATCH p=(neo)<-[:TARGET_BY_LINK*2..2]-(from)
+WHERE neo <> from
+RETURN extract(n in nodes(p) | n.title) as pages, reduce(x=0, r in rels(p) | x + r.occurences) as occ
+ORDER BY occ DESC
+
+Neo4j, Graph_database, NoSQL	1450
+Neo4j, Graph_database, Big_data	1045
+Neo4j, Graph_database, Graph_(abstract_data_type)	967
+Neo4j, Graph_database, Triplestore	897
+Neo4j, Graph_database, Network_model	882
+Neo4j, Graph_database, Nested_set_model	865
+Neo4j, Graph_database, Graph_theory	863
+Neo4j, Graph_database, DEX_(Graph_database)	856
+Neo4j, Graph_database, Graph_(mathematics)	856
+Neo4j, Graph_database, Cypher_Query_Language	852
+----
+
+So the NoSQL movement and the Graph ecosystem are the most common referers, which is not suprising.
+
+== From Google to Neo4j
+
+The last insight I wanted to find is, from Google Search on which page users land and then click on a link pointing to the
+Neo4j page.
+
+The query seemed obvious to me and I expected really fast query times as I describe the whole pattern I want back and the page
+titles are indexed :
+
+[source,cypher]
+MATCH (neo:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
+MATCH (neo)<-[:TARGET_BY_LINK]-(x)<-[:TARGET_BY_SEARCH]-(google)
+RETURN x.title
+
+Unfortunately, this query took 24 seconds to return on my machine with a default 4GB heap settings for Neo4j.
+
+My first reaction of course was to analyse the execution plan with the PROFILE keyword (yes I know that PROFILE can be run in the browser
+now but I just love little windows with black backgrounds :) )
+
+[source,bash]
+----
+neo4j-sh (?)$ PROFILE MATCH (neo:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
+> MATCH (neo)<-[:TARGET_BY_LINK]-(x)<-[:TARGET_BY_SEARCH]-(google)
+> RETURN x.title;
++---------------------------------+
+| x.title                         |
++---------------------------------+
+| "FlockDB"                       |
+| "Cypher_Query_Language"         |
+| "Spatial_database"              |
+| "List_of_AGPL_web_applications" |
+| "Graph_database"                |
++---------------------------------+
+5 rows
+36565 ms
+
+Compiler CYPHER 2.2
+
+Planner COST
+
+Projection
+  |
+  +Filter
+    |
+    +Expand(All)(0)
+      |
+      +Expand(All)(1)
+        |
+        +NodeIndexSeek
+
++----------------+---------------+---------+----------+-------------------------+--------------------------------------------------------------------+
+|       Operator | EstimatedRows |    Rows |   DbHits |             Identifiers |                                                              Other |
++----------------+---------------+---------+----------+-------------------------+--------------------------------------------------------------------+
+|     Projection |     0.0000025 |       5 |       10 | google, neo, x, x.title |                                                            x.title |
+|         Filter |     0.0000025 |       5 | 23174043 |          google, neo, x | (hasLabel(neo:Page) AND Property(neo,title(1)) == {  AUTOSTRING0}) |
+| Expand(All)(0) |           6.8 | 7724681 |  9857967 |          google, neo, x |                                       (x)-[:TARGET_BY_LINK]->(neo) |
+| Expand(All)(1) |           1.9 | 2133286 |  2133287 |               google, x |                                  (google)-[:TARGET_BY_SEARCH]->(x) |
+|  NodeIndexSeek |           1.0 |       1 |        2 |                  google |                                                       :Page(title) |
++----------------+---------------+---------+----------+-------------------------+--------------------------------------------------------------------+
+
+Total database accesses: 35165309
+----
+
+So why so much time and database accesses ? I was really enjoying the 2.2 release and the new cost based planner and it was like
+all that happiness was thrown away with what appeared to me to be a simple query.
+
+I tried different ways of doing the same query. Variable length paths, multiple relationships types etc... without any performance
+improvement.
+
+I spoke about this behavior with my friend :linkhttp://twitter.com/mesirii[Michael] and he asked me to do change the query to this :
+
+[source,cypher]
+----
+MATCH (neo:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
+MATCH (neo)<-[:TARGET_BY_LINK]-(x)
+WHERE (x)<-[:TARGET_BY_SEARCH]-(google)
+RETURN count(*);
+
+neo4j-sh (?)$ PROFILE MATCH (neo:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
+> MATCH (neo)<-[:TARGET_BY_LINK]-(x)
+> WHERE (x)<-[:TARGET_BY_SEARCH]-(google)
+> RETURN count(*);
++----------+
+| count(*) |
++----------+
+| 5        |
++----------+
+1 row
+210 ms
+
+Compiler CYPHER 2.2
+
+Planner COST
+
+EagerAggregation
+  |
+  +SemiApply
+    |
+    +CartesianProduct
+    |  |
+    |  +NodeIndexSeek(0)
+    |  |
+    |  +Expand(All)
+    |     |
+    |     +NodeIndexSeek(1)
+    |
+    +Expand(Into)
+       |
+       +Argument
+
++------------------+---------------+------+--------+----------------+-----------------------------------+
+|         Operator | EstimatedRows | Rows | DbHits |    Identifiers |                             Other |
++------------------+---------------+------+--------+----------------+-----------------------------------+
+| EagerAggregation |           1.6 |    1 |      0 |       count(*) |                                   |
+|        SemiApply |           2.7 |    5 |      0 | google, neo, x |                                   |
+| CartesianProduct |           3.6 |    7 |      0 | google, neo, x |                                   |
+| NodeIndexSeek(0) |           1.0 |    1 |      2 |         google |                      :Page(title) |
+|      Expand(All) |           3.6 |    7 |      8 |         neo, x |      (neo)<-[:TARGET_BY_LINK]-(x) |
+| NodeIndexSeek(1) |           1.0 |    1 |      2 |            neo |                      :Page(title) |
+|     Expand(Into) |     0.0000025 |    0 |     43 |      google, x | (google)-[:TARGET_BY_SEARCH]->(x) |
+|         Argument |           3.6 |    7 |      0 |      google, x |                                   |
++------------------+---------------+------+--------+----------------+-----------------------------------+
+
+Total database accesses: 55
+----
+
+Wow, stunning, amazing, query returning results in 14ms as I expected in my first attempts. It looks like Cypher needs more hints
+than in the previous 2.1.x versions.
+
+NB: Note that the **other-google** Page node has more than 2 millions _TARGET_BY_SEARCH_ outgoing relationships.
+
+However I couldn't accept it as a final solution. Mostly because such queries make summing the relationship properties not so
+user-friendly anymore.
+
+Thanks again to Michael, he asked Neo4j internal team and their answer was the following :
+
+The cost based planner only knows that a Page node has between 5 and 50000 relationships. So when planning it can't decide at runtime.
+At planning time there is no individual nodes, only labels, relationships and properties so it actually does'nt know what the
+parameter is.
+
+So, if the __other-google__ node would have between 5 and 50k nodes, the first query would behave as I expected.
+
+The solution is to give again a hint to Cypher with the **USING** clause.
+
+[source,cypher]
+----
+MATCH (page:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
+USING INDEX page:Page(title)
+MATCH (page)<-[:TARGET_BY_LINK]-(x)<-[:TARGET_BY_SEARCH]-(google)
+RETURN count(*);
+
+neo4j-sh (?)$ PROFILE MATCH (page:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
+> USING INDEX page:Page(title)
+> MATCH (page)<-[:TARGET_BY_LINK]-(x)<-[:TARGET_BY_SEARCH]-(google)
+> RETURN count(*);
++----------+
+| count(*) |
++----------+
+| 5        |
++----------+
+1 row
+12 ms
+
+Compiler CYPHER 2.2
+
+Planner COST
+
+EagerAggregation
+  |
+  +Filter
+    |
+    +Expand(All)(0)
+      |
+      +Expand(All)(1)
+        |
+        +NodeIndexSeek
+
++------------------+---------------+------+--------+-----------------+--------------------------------------------------------------------------+
+|         Operator | EstimatedRows | Rows | DbHits |     Identifiers |                                                                    Other |
++------------------+---------------+------+--------+-----------------+--------------------------------------------------------------------------+
+| EagerAggregation |        0.0016 |    1 |      0 |        count(*) |                                                                          |
+|           Filter |     0.0000025 |    5 |     99 | google, page, x | (hasLabel(google:Page) AND Property(google,title(1)) == {  AUTOSTRING1}) |
+|   Expand(All)(0) |           6.8 |   33 |     40 | google, page, x |                                        (x)<-[:TARGET_BY_SEARCH]-(google) |
+|   Expand(All)(1) |           3.6 |    7 |      8 |         page, x |                                            (page)<-[:TARGET_BY_LINK]-(x) |
+|    NodeIndexSeek |           1.0 |    1 |      2 |            page |                                                             :Page(title) |
++------------------+---------------+------+--------+-----------------+--------------------------------------------------------------------------+
+
+Total database accesses: 149
+----
+
+And the query is done in 10ms !!!
+
+== Conclusion
+
+In opposition to Neo4j2.1.x and the rule based planner, giving more hints to Cypher is now the way to go. I'm happy to see such performances
+and I'm looking forward to discover more tips like this.
+
+Thanks again to Michael and the Neo4j team for the quick reply and to the amazing Neo4j community in general.
+
+Chris
