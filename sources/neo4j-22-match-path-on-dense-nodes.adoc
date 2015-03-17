@@ -5,6 +5,8 @@ v1.0, 17-03-2015
 :homepage: http://chris.neoxygen.io
 :keywords: neo4j, cypher, database, graph, nodes, relationships, wikipedia, google, search
 
+image::../_images/wikimedia_google_to_neo.png[]
+
 == TLDR;
 
 During the last weekend, I came up to a tweet announcing that Wikimedia released the dataset ot the pages clickstreams
@@ -23,6 +25,8 @@ You can download the dataset here : http://datahub.io/dataset/wikipedia-clickstr
 
 Importing the dataset is really straightforward and the code I used can be found on
 link:https://gist.github.com/ikwattro/acf99e7354bbb14b9c4f[this gist].
+
+image::../_images/wikimedia.png[]
 
 == Analysing the data
 
