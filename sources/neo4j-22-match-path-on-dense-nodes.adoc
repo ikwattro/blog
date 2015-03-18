@@ -151,12 +151,12 @@ summing the relationship properties not so user-friendly anymore.
 
 Thanks again to Michael, he asked Neo4j Cypher team and their answer was the following :
 
-----
+____
 The cost based planner only knows from the database statistics that a `:Page` node has between 0 and x millions relationships.
 So when planning the query it doesn't have any runtime information and does not prefer either side of the query. At planning time
 there is no runtime information available, only counts for labels, relationships and property cardinalities and selectivities,
 so it actually doesn't know if the assumption holds true later.
-----
+____
 
 The solution is to tell Cypher which node to start from with the `USING` clause.
 

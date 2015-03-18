@@ -637,13 +637,15 @@ summing the relationship properties not so user-friendly anymore.</p>
 <div class="paragraph">
 <p>Thanks again to Michael, he asked Neo4j Cypher team and their answer was the following :</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre>The cost based planner only knows from the database statistics that a `:Page` node has between 0 and x millions relationships.
-So when planning the query it doesn't have any runtime information and does not prefer either side of the query. At planning time
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>The cost based planner only knows from the database statistics that a <code>:Page</code> node has between 0 and x millions relationships.
+So when planning the query it doesn&#8217;t have any runtime information and does not prefer either side of the query. At planning time
 there is no runtime information available, only counts for labels, relationships and property cardinalities and selectivities,
-so it actually doesn't know if the assumption holds true later.</pre>
+so it actually doesn&#8217;t know if the assumption holds true later.</p>
 </div>
+</blockquote>
 </div>
 <div class="paragraph">
 <p>The solution is to tell Cypher which node to start from with the <code>USING</code> clause.</p>
@@ -699,7 +701,7 @@ ou sur StackOverflow en taggant votre question avec "neo4j".</p>
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2015-03-18 19:08:34 CET
+Last updated 2015-03-18 19:10:39 CET
 &nbsp;|&nbsp;
 <a href="https://twitter.com/ikwattro" title="Follow me on Twitter" target="_blank" style="color:#fff;">Follow me on Twitter</a>
 &nbsp;|&nbsp;
