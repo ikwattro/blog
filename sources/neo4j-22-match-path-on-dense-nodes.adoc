@@ -144,7 +144,7 @@ all that happiness was thrown away with what appeared to me to be a simple query
 I tried different ways of doing the same query. Variable length paths, multiple relationships types etc... without any performance
 improvement.
 
-I spoke about this behavior with my friend :linkhttp://twitter.com/mesirii[Michael] and he asked me to do change the query to this :
+I spoke about this behavior with my friend http://twitter.com/mesirii[Michael] and he asked me to do change the query to this :
 
 [source,cypher]
 ----
