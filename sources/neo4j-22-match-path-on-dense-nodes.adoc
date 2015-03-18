@@ -227,9 +227,6 @@ there is no runtime information available, only counts for labels, relationships
 so it actually doesn't know if the assumption holds true later.
 ----
 
-
-So, if the __other-google__ node would have between 5 and 50k nodes, the first query would behave as I expected.
-
 The solution is to tell Cypher which node to start from with the `USING` clause.
 
 [source,cypher]
