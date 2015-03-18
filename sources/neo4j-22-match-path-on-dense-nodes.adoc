@@ -9,7 +9,7 @@ image::../_images/wikimedia_google_to_neo.png[]
 
 == TLDR;
 
-During the last weekend, I came accross a tweet announcing that Wikimedia released the dataset ot the pages clickstreams
+During the last weekend, I came accross a tweet announcing that Wikimedia released the dataset of the pages clickstreams
 for February 2015.
 
 ++++
