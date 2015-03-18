@@ -215,8 +215,8 @@ Total database accesses: 14
 21949 ms
 ----
 
-However I couldn't accept it as a final solution. Mostly because such queries make summing the relationship properties not so
-user-friendly anymore.
+However I couldn't accept it as a long-term solution but more as a temporary workaround. Mostly because such queries make
+summing the relationship properties not so user-friendly anymore.
 
 Thanks again to Michael, he asked Neo4j Cypher team and their answer was the following :
 
