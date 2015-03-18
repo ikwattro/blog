@@ -116,53 +116,12 @@ MATCH (neo)<-[:TARGET_BY_LINK]-(x)
 WHERE (x)<-[:TARGET_BY_SEARCH]-(google)
 RETURN count(*);
 
-neo4j-sh (?)$ PROFILE MATCH (neo:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
-> MATCH (neo)<-[:TARGET_BY_LINK]-(x)
-> WHERE (x)<-[:TARGET_BY_SEARCH]-(google)
-> RETURN count(*);
-+----------+
-| count(*) |
-+----------+
-| 5        |
-+----------+
-1 row
-210 ms
-
-Compiler CYPHER 2.2
-
-Planner COST
-
-EagerAggregation
-  |
-  +SemiApply
-    |
-    +CartesianProduct
-    |  |
-    |  +NodeIndexSeek(0)
-    |  |
-    |  +Expand(All)
-    |     |
-    |     +NodeIndexSeek(1)
-    |
-    +Expand(Into)
-       |
-       +Argument
-
-+------------------+---------------+------+--------+----------------+-----------------------------------+
-|         Operator | EstimatedRows | Rows | DbHits |    Identifiers |                             Other |
-+------------------+---------------+------+--------+----------------+-----------------------------------+
-| EagerAggregation |           1.6 |    1 |      0 |       count(*) |                                   |
-|        SemiApply |           2.7 |    5 |      0 | google, neo, x |                                   |
-| CartesianProduct |           3.6 |    7 |      0 | google, neo, x |                                   |
-| NodeIndexSeek(0) |           1.0 |    1 |      2 |         google |                      :Page(title) |
-|      Expand(All) |           3.6 |    7 |      8 |         neo, x |      (neo)<-[:TARGET_BY_LINK]-(x) |
-| NodeIndexSeek(1) |           1.0 |    1 |      2 |            neo |                      :Page(title) |
-|     Expand(Into) |     0.0000025 |    0 |     43 |      google, x | (google)-[:TARGET_BY_SEARCH]->(x) |
-|         Argument |           3.6 |    7 |      0 |      google, x |                                   |
-+------------------+---------------+------+--------+----------------+-----------------------------------+
-
-Total database accesses: 55
+count(*)
+5
+Returned 1 row in 43 ms.
 ----
+
+image::../_images/plan_where.png[]
 
 Wow, stunning, amazing, query returning results in 14ms as I expected in my first attempts. It looks like Cypher needs more hints
 than in the previous 2.1.x versions.
@@ -171,49 +130,21 @@ You can still use the previous Cypher rule planner by prepending `PLANNER RULE` 
 
 [source,cypher]
 ----
-neo4j-sh (?)$ PLANNER RULE
-> PROFILE MATCH (neo:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
-> MATCH (neo)<-[:TARGET_BY_LINK]-(x)<-[:TARGET_BY_SEARCH]-(google)
-> RETURN x.title;
-+---------------------------------+
-| x.title                         |
-+---------------------------------+
-| "FlockDB"                       |
-| "Cypher_Query_Language"         |
-| "Spatial_database"              |
-| "List_of_AGPL_web_applications" |
-| "Graph_database"                |
-+---------------------------------+
-5 rows
-17680 ms
+PLANNER RULE
+MATCH (neo:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
+MATCH (neo)<-[:TARGET_BY_LINK]-(x)<-[:TARGET_BY_SEARCH]-(google)
+RETURN x.title;
 
-Compiler CYPHER 2.2
-
-Planner RULE
-
-ColumnFilter
-  |
-  +Extract
-    |
-    +SimplePatternMatcher
-      |
-      +SchemaIndex(0)
-        |
-        +SchemaIndex(1)
-
-+----------------------+------+--------+-------------------------------------------+-------------------------------+
-|             Operator | Rows | DbHits |                               Identifiers |                         Other |
-+----------------------+------+--------+-------------------------------------------+-------------------------------+
-|         ColumnFilter |    5 |      0 |                                           |          keep columns x.title |
-|              Extract |    5 |     10 |                                           |                       x.title |
-| SimplePatternMatcher |    5 |      0 | x,   UNNAMED82, google, neo,   UNNAMED105 |                               |
-|       SchemaIndex(0) |    1 |      2 |                            google, google | {  AUTOSTRING1}; :Page(title) |
-|       SchemaIndex(1) |    1 |      2 |                                  neo, neo | {  AUTOSTRING0}; :Page(title) |
-+----------------------+------+--------+-------------------------------------------+-------------------------------+
-
-Total database accesses: 14
-21949 ms
+x.title
+FlockDB
+Cypher_Query_Language
+Spatial_database
+List_of_AGPL_web_applications
+Graph_database
+Returned 5 rows in 27596 ms.
 ----
+
+image::../_images/plan_rule.png[]
 
 However I couldn't accept it as a long-term solution but more as a temporary workaround. Mostly because such queries make
 summing the relationship properties not so user-friendly anymore.
@@ -236,46 +167,14 @@ USING INDEX page:Page(title)
 MATCH (page)<-[:TARGET_BY_LINK]-(x)<-[:TARGET_BY_SEARCH]-(google)
 RETURN count(*);
 
-neo4j-sh (?)$ PROFILE MATCH (page:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
-> USING INDEX page:Page(title)
-> MATCH (page)<-[:TARGET_BY_LINK]-(x)<-[:TARGET_BY_SEARCH]-(google)
-> RETURN count(*);
-+----------+
-| count(*) |
-+----------+
-| 5        |
-+----------+
-1 row
-12 ms
-
-Compiler CYPHER 2.2
-
-Planner COST
-
-EagerAggregation
-  |
-  +Filter
-    |
-    +Expand(All)(0)
-      |
-      +Expand(All)(1)
-        |
-        +NodeIndexSeek
-
-+------------------+---------------+------+--------+-----------------+--------------------------------------------------------------------------+
-|         Operator | EstimatedRows | Rows | DbHits |     Identifiers |                                                                    Other |
-+------------------+---------------+------+--------+-----------------+--------------------------------------------------------------------------+
-| EagerAggregation |        0.0016 |    1 |      0 |        count(*) |                                                                          |
-|           Filter |     0.0000025 |    5 |     99 | google, page, x | (hasLabel(google:Page) AND Property(google,title(1)) == {  AUTOSTRING1}) |
-|   Expand(All)(0) |           6.8 |   33 |     40 | google, page, x |                                        (x)<-[:TARGET_BY_SEARCH]-(google) |
-|   Expand(All)(1) |           3.6 |    7 |      8 |         page, x |                                            (page)<-[:TARGET_BY_LINK]-(x) |
-|    NodeIndexSeek |           1.0 |    1 |      2 |            page |                                                             :Page(title) |
-+------------------+---------------+------+--------+-----------------+--------------------------------------------------------------------------+
-
-Total database accesses: 149
+count(*)
+5
+Returned 1 row in 11 ms.
 ----
 
-And the query is done in 10ms !!!
+image::../_images/plan_using.png[]
+
+And the query is done in 11ms in the browser !!!
 
 
 == Conclusion
