@@ -456,8 +456,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_tldr">TLDR;</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>During the last weekend, I came up to a tweet announcing that Wikimedia released the dataset ot the pages clickstreams
-for the month of Feb 2015.</p>
+<p>During the last weekend, I came accross a tweet announcing that Wikimedia released the dataset ot the pages clickstreams
+for February 2015.</p>
 </div>
 <blockquote class="twitter-tweet" lang="en"><p>La <a href="https://twitter.com/Wikimedia">@Wikimedia</a> Foundation libère en <a href="https://twitter.com/hashtag/OpenData?src=hash">#OpenData</a> des jeux de données sur l&#39;usage de Wikipedia (CC0) <a href="https://t.co/nTKlxRBIQG">https://t.co/nTKlxRBIQG</a></p>&mdash; S.I.Lex (@Calimaq) <a href="https://twitter.com/Calimaq/status/577033473883439105">15 Mars 2015</a></blockquote>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
@@ -518,8 +518,10 @@ Spatial_database	25</code></pre>
 <pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (neo:Page {title:'Neo4j'})
 MATCH p=(neo)&lt;-[:TARGET_BY_LINK*2..2]-(from)
 WHERE neo &lt;&gt; from
-RETURN extract(n in nodes(p) | n.title) as pages, reduce(x=0, r in rels(p) | x + r.occurences) as occ
+RETURN extract(n in nodes(p) | n.title) as pages,
+reduce(x=0, r in rels(p) | x + r.occurences) as occ
 ORDER BY occ DESC
+LIMIT 10
 
 Neo4j, Graph_database, NoSQL	1450
 Neo4j, Graph_database, Big_data	1045
@@ -542,11 +544,10 @@ Neo4j, Graph_database, Cypher_Query_Language	852</code></pre>
 <h2 id="_from_google_to_neo4j">From Google to Neo4j</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The last insight I wanted to find is, from Google Search on which page users land and then click on a link pointing to the
-Neo4j page.</p>
+<p>The last insight I wanted to gain is to know how people arrive at the Neo4j page from another one that they found via a google search.</p>
 </div>
 <div class="paragraph">
-<p>The query seemed obvious to me and I expected really fast query times as I describe the whole pattern I want back and the page
+<p>The query seemed obvious to me and I expected really fast response times as I&#8217;m describing the whole pattern and the page
 titles are indexed :</p>
 </div>
 <div class="listingblock">
@@ -560,63 +561,29 @@ RETURN x.title</code></pre>
 <p>Unfortunately, this query took 24 seconds to return on my machine with a default 4GB heap settings for Neo4j.</p>
 </div>
 <div class="paragraph">
-<p>My first reaction of course was to analyse the execution plan with the PROFILE keyword (yes I know that PROFILE can be run in the browser
-now but I just love little windows with black backgrounds :) )</p>
+<p>NB: Note that the <strong>other-google</strong> Page node has more than 2 millions <em>TARGET_BY_SEARCH</em> outgoing relationships.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
+<p>My first reaction of course was to analyse the execution plan with PROFILE :</p>
+</div>
+<div class="imageblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">neo4j-sh (?)$ PROFILE MATCH (neo:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
-&gt; MATCH (neo)&lt;-[:TARGET_BY_LINK]-(x)&lt;-[:TARGET_BY_SEARCH]-(google)
-&gt; RETURN x.title;
-+---------------------------------+
-| x.title                         |
-+---------------------------------+
-| "FlockDB"                       |
-| "Cypher_Query_Language"         |
-| "Spatial_database"              |
-| "List_of_AGPL_web_applications" |
-| "Graph_database"                |
-+---------------------------------+
-5 rows
-36565 ms
-
-Compiler CYPHER 2.2
-
-Planner COST
-
-Projection
-  |
-  +Filter
-    |
-    +Expand(All)(0)
-      |
-      +Expand(All)(1)
-        |
-        +NodeIndexSeek
-
-+----------------+---------------+---------+----------+-------------------------+--------------------------------------------------------------------+
-|       Operator | EstimatedRows |    Rows |   DbHits |             Identifiers |                                                              Other |
-+----------------+---------------+---------+----------+-------------------------+--------------------------------------------------------------------+
-|     Projection |     0.0000025 |       5 |       10 | google, neo, x, x.title |                                                            x.title |
-|         Filter |     0.0000025 |       5 | 23174043 |          google, neo, x | (hasLabel(neo:Page) AND Property(neo,title(1)) == {  AUTOSTRING0}) |
-| Expand(All)(0) |           6.8 | 7724681 |  9857967 |          google, neo, x |                                       (x)-[:TARGET_BY_LINK]-&gt;(neo) |
-| Expand(All)(1) |           1.9 | 2133286 |  2133287 |               google, x |                                  (google)-[:TARGET_BY_SEARCH]-&gt;(x) |
-|  NodeIndexSeek |           1.0 |       1 |        2 |                  google |                                                       :Page(title) |
-+----------------+---------------+---------+----------+-------------------------+--------------------------------------------------------------------+
-
-Total database accesses: 35165309</code></pre>
+<img src="../_images/query_plan_wikimedia.png" alt="query plan wikimedia">
 </div>
 </div>
 <div class="paragraph">
-<p>So why so much time and database accesses ? I was really enjoying the 2.2 release and the new cost based planner and it was like
-all that happiness was thrown away with what appeared to me to be a simple query.</p>
+<p>So why so much time and database accesses ? I was really enjoying the 2.2 release however
+I was confused why the cost based planner couldn&#8217;t figure out to run this simple query efficiently.</p>
 </div>
 <div class="paragraph">
 <p>I tried different ways of doing the same query. Variable length paths, multiple relationships types etc&#8230;&#8203; without any performance
 improvement.</p>
 </div>
 <div class="paragraph">
-<p>I spoke about this behavior with my friend <a href="http://twitter.com/mesirii">Michael</a> and he asked me to do change the query to this :</p>
+<p>I spoke about this behavior with my friend <a href="http://twitter.com/mesirii">Michael</a> and he asked me to do change the query to the following.
+He said that calculating matches on a simple pattern like <code>(x)&#8592;[:TARGET_BY_SEARCH]-(google)</code> now takes the degree of both nodes at runtime into account
+and checks from the side with the smaller degree. The same applies to calculating the counts of simple path expressions
+like <code>size( (page)-[:TARGET_BY_LINK]&#8594;())</code> where also the degree of the given node is used instead of iterating the relationships.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -678,25 +645,74 @@ Total database accesses: 55</code></pre>
 than in the previous 2.1.x versions.</p>
 </div>
 <div class="paragraph">
-<p>NB: Note that the <strong>other-google</strong> Page node has more than 2 millions <em>TARGET_BY_SEARCH</em> outgoing relationships.</p>
+<p>You can still use the previous Cypher rule planner by prepending <code>PLANNER RULE</code> to your queries :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cypher" data-lang="cypher">neo4j-sh (?)$ PLANNER RULE
+&gt; PROFILE MATCH (neo:Page {title:'Neo4j'}), (google:Page {title:'other-google'})
+&gt; MATCH (neo)&lt;-[:TARGET_BY_LINK]-(x)&lt;-[:TARGET_BY_SEARCH]-(google)
+&gt; RETURN x.title;
++---------------------------------+
+| x.title                         |
++---------------------------------+
+| "FlockDB"                       |
+| "Cypher_Query_Language"         |
+| "Spatial_database"              |
+| "List_of_AGPL_web_applications" |
+| "Graph_database"                |
++---------------------------------+
+5 rows
+17680 ms
+
+Compiler CYPHER 2.2
+
+Planner RULE
+
+ColumnFilter
+  |
+  +Extract
+    |
+    +SimplePatternMatcher
+      |
+      +SchemaIndex(0)
+        |
+        +SchemaIndex(1)
+
++----------------------+------+--------+-------------------------------------------+-------------------------------+
+|             Operator | Rows | DbHits |                               Identifiers |                         Other |
++----------------------+------+--------+-------------------------------------------+-------------------------------+
+|         ColumnFilter |    5 |      0 |                                           |          keep columns x.title |
+|              Extract |    5 |     10 |                                           |                       x.title |
+| SimplePatternMatcher |    5 |      0 | x,   UNNAMED82, google, neo,   UNNAMED105 |                               |
+|       SchemaIndex(0) |    1 |      2 |                            google, google | {  AUTOSTRING1}; :Page(title) |
+|       SchemaIndex(1) |    1 |      2 |                                  neo, neo | {  AUTOSTRING0}; :Page(title) |
++----------------------+------+--------+-------------------------------------------+-------------------------------+
+
+Total database accesses: 14
+21949 ms</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>However I couldn&#8217;t accept it as a final solution. Mostly because such queries make summing the relationship properties not so
 user-friendly anymore.</p>
 </div>
 <div class="paragraph">
-<p>Thanks again to Michael, he asked Neo4j internal team and their answer was the following :</p>
+<p>Thanks again to Michael, he asked Neo4j Cypher team and their answer was the following :</p>
 </div>
-<div class="paragraph">
-<p>The cost based planner only knows that a Page node has between 5 and 50000 relationships. So when planning it can&#8217;t decide at runtime.
-At planning time there is no individual nodes, only labels, relationships and properties so it actually does&#8217;nt know what the
-parameter is.</p>
+<div class="listingblock">
+<div class="content">
+<pre>The cost based planner only knows from the database statistics that a `:Page` node has between 5 and 2.000.000 relationships.
+So when planning the query it doesn't have any runtime information and does not prefer either side of the query. At planning time
+there is no runtime information available, only counts for labels, relationships and property cardinalities and selectivities,
+so it actually doesn't know if the assumption holds true later.</pre>
+</div>
 </div>
 <div class="paragraph">
 <p>So, if the <em>other-google</em> node would have between 5 and 50k nodes, the first query would behave as I expected.</p>
 </div>
 <div class="paragraph">
-<p>The solution is to give again a hint to Cypher with the <strong>USING</strong> clause.</p>
+<p>The solution is to tell Cypher which node to start from with the <code>USING</code> clause.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -753,14 +769,10 @@ Total database accesses: 149</code></pre>
 <h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In opposition to Neo4j2.1.x and the rule based planner, giving more hints to Cypher is now the way to go. I&#8217;m happy to see such performances
-and I&#8217;m looking forward to discover more tips like this.</p>
+<p>As always, the PROFILER allows you to quickly identify performance problems of your queries.</p>
 </div>
 <div class="paragraph">
-<p>Thanks again to Michael and the Neo4j team for the quick reply and to the amazing Neo4j community in general.</p>
-</div>
-<div class="paragraph">
-<p>Chris</p>
+<p>Thanks to Michael and the Neo4j Cypher team for a fast support.</p>
 </div>
 </div>
 </div>
@@ -782,7 +794,7 @@ ou sur StackOverflow en taggant votre question avec "neo4j".</p>
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2015-03-18 10:33:24 CET
+Last updated 2015-03-18 13:42:31 CET
 &nbsp;|&nbsp;
 <a href="https://twitter.com/ikwattro" title="Follow me on Twitter" target="_blank" style="color:#fff;">Follow me on Twitter</a>
 &nbsp;|&nbsp;
