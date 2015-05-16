@@ -30,12 +30,12 @@ and these companies have a specialty in a programming language consultancy.
 You can paste this Cypher representation into Graphgen and click on generate :
 
 [source,cypher]
----
+----
 (person:#Person:#User *100)-[:LIVES_IN *n..1]->(country:Country {name:country} *15)
 (person)-[:KNOWS *n..n]->(person)
 (person)-[:WORKS_AT *n..1]->(company:Company {name:company} *25)
 (company)-[:SPECIALIZE_IN *n..n]->(language:ProgrammingLanguage {name:progLanguage} *50)
----
+----
 
 You can then click on "Populate", enter the details of your Neo4j instance location and import the graph into
  your Neo4j database :
@@ -103,7 +103,7 @@ There are some issues however :
 the font-size.
 
 [source,javascript]
----
+----
 var options = {
         nodes: {
             shape: 'circle',
@@ -113,7 +113,7 @@ var options = {
         }
     };
     var network = new vis.Network(container, g, options);
----
+----
 
 image::../_images/vis/vis_image5.png[]
 
@@ -128,7 +128,7 @@ you're happy with the configuration you want, you can export this configuration 
 Let's activate this configuration option :
 
 [source,javascript]
----
+----
 var options = {
         configurePhysics: true,
         nodes: {
@@ -138,7 +138,7 @@ var options = {
             fontSize: 11
         }
     };
----
+----
 
 
 image::../_images/vis/vis_image7.png[]
@@ -147,7 +147,7 @@ image::../_images/vis/vis_image7.png[]
 Once done, you can just copy the physics json configuration that appeared in the browser and paste it in your configuration options :
 
 [source,cypher]
----
+----
 var options = {
         physics: {barnesHut: {gravitationalConstant: -15150, centralGravity: 3.45, springLength: 261, damping: 0.3}},
         nodes: {
@@ -157,7 +157,7 @@ var options = {
             fontSize: 11
         }
     };
----
+----
 
 
 === Edges labels
@@ -169,7 +169,7 @@ labels aligned on the edges ? A lot of code... :(
 In Vis.js, it can not be more easier :
 
 [source,javascript]
----
+----
 var options = {
         //...
         edges: {
@@ -177,7 +177,7 @@ var options = {
             labelAlignment: 'line-above'
         }
     };
----
+----
 
 And that's it !
 

@@ -486,12 +486,10 @@ and these companies have a specialty in a programming language consultancy.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-cypher" data-lang="cypher">---
-(person:#Person:#User *100)-[:LIVES_IN *n..1]-&gt;(country:Country {name:country} *15)
+<pre class="highlight"><code class="language-cypher" data-lang="cypher">(person:#Person:#User *100)-[:LIVES_IN *n..1]-&gt;(country:Country {name:country} *15)
 (person)-[:KNOWS *n..n]-&gt;(person)
 (person)-[:WORKS_AT *n..1]-&gt;(company:Company {name:company} *25)
-(company)-[:SPECIALIZE_IN *n..n]-&gt;(language:ProgrammingLanguage {name:progLanguage} *50)
----</code></pre>
+(company)-[:SPECIALIZE_IN *n..n]-&gt;(language:ProgrammingLanguage {name:progLanguage} *50)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -587,8 +585,7 @@ the font-size.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">---
-var options = {
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">var options = {
         nodes: {
             shape: 'circle',
             radius: 15,
@@ -596,8 +593,7 @@ var options = {
             fontSize: 11
         }
     };
-    var network = new vis.Network(container, g, options);
----</code></pre>
+    var network = new vis.Network(container, g, options);</code></pre>
 </div>
 </div>
 <div class="imageblock">
@@ -621,8 +617,7 @@ you&#8217;re happy with the configuration you want, you can export this configur
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">---
-var options = {
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">var options = {
         configurePhysics: true,
         nodes: {
             shape: 'circle',
@@ -630,8 +625,7 @@ var options = {
             radiusMax: 20,
             fontSize: 11
         }
-    };
----</code></pre>
+    };</code></pre>
 </div>
 </div>
 <div class="imageblock">
@@ -644,8 +638,7 @@ var options = {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-cypher" data-lang="cypher">---
-var options = {
+<pre class="highlight"><code class="language-cypher" data-lang="cypher">var options = {
         physics: {barnesHut: {gravitationalConstant: -15150, centralGravity: 3.45, springLength: 261, damping: 0.3}},
         nodes: {
             shape: 'circle',
@@ -653,8 +646,7 @@ var options = {
             radiusMax: 20,
             fontSize: 11
         }
-    };
----</code></pre>
+    };</code></pre>
 </div>
 </div>
 </div>
@@ -669,15 +661,13 @@ labels aligned on the edges ? A lot of code&#8230;&#8203; :(</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">---
-var options = {
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">var options = {
         //...
         edges: {
             style: 'arrow',
             labelAlignment: 'line-above'
         }
-    };
----</code></pre>
+    };</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -726,7 +716,7 @@ ou sur StackOverflow en taggant votre question avec "neo4j".</p>
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2015-05-16 02:07:03 CEST
+Last updated 2015-05-16 10:50:04 CEST
 &nbsp;|&nbsp;
 <a href="https://twitter.com/ikwattro" title="Follow me on Twitter" target="_blank" style="color:#fff;">Follow me on Twitter</a>
 &nbsp;|&nbsp;
