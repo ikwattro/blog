@@ -4,6 +4,7 @@ v1.0, 15-05-2015
 :toc:
 :homepage: http://chris.neoxygen.io
 :keywords: neo4j, cypher, database, graph, visualization, javascript
+:source-highlighter: highlightjs
 
 == Introduction
 

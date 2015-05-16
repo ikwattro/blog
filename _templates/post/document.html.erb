@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<%= attr :encoding %>">
 <meta name="generator" content="Asciidoctor <%= attr 'asciidoctor-version' %>">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"><%
 [:description, :keywords, :author, :copyright].each do |key|
   if attr? key %>
@@ -198,5 +199,6 @@ end %><%= (docinfo_content = (docinfo :footer)).empty? ? nil : %(
 </div>
 </div><%
 end %>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
 </body>
 </html>
