@@ -4,10 +4,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="generator" content="Asciidoctor 1.5.2">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Installation de Neo4j, premiers pas avec le navigateur de base de données graphe, le shell console et vos premières requêtes Cypher">
-<meta name="keywords" content="neo4j, cypher, base de données, graphe, console, webadmin, browser, navigateur">
+<meta name="keywords" content="neo4j, cypher, database, graph, visualization, javascript">
 <meta name="author" content="Christophe Willemsen">
-<title>Installation et premiers pas</title>
+<title>Easy Graph Visualization with Vis.js</title>
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
 /* Remove the comments around the @import statement below when using this as a custom stylesheet */
@@ -425,17 +424,26 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <div class="details"><p><a href="http://chris.neoxygen.io" alt="Retour à l'accueil">Accueil</a></p></div>
 
-<h1>Installation et premiers pas</h1>
+<h1>Easy Graph Visualization with Vis.js</h1>
 <div class="details">
 <span id="author" class="author">Christophe Willemsen</span><br>
 <span id="email" class="email"><a href="mailto:chris@neoxygen.io">chris@neoxygen.io</a></span><br>
 <span id="revnumber">version 1.0,</span>
-<span id="revdate">18-01-2015</span>
+<span id="revdate">15-05-2015</span>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#_introduction">Introduction</a></li>
+<li><a href="#_setup">Setup</a></li>
+<li><a href="#_using_vis_js">Using Vis.js</a>
+<ul class="sectlevel2">
+<li><a href="#_graph_styling">Graph Styling</a></li>
+<li><a href="#_physics">Physics</a></li>
+<li><a href="#_edges_labels">Edges labels</a></li>
+</ul>
+</li>
+<li><a href="#_conclusion">Conclusion</a></li>
 </ul>
 </div>
 </div>
@@ -444,12 +452,256 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Après mon article "<a href="articles/decouverte-de-neo4j.html">Découverte de Neo4j, la base de données graphe</a>", je vous propose de manipuler
-votre premier graphe.</p>
+<p>Sometimes you just want to show data in an application. When working with graph databases like Neo4j, what more
+natural than showing a graph visualisation.</p>
 </div>
 <div class="paragraph">
-<p>Nous commencerons par le téléchargement et l&#8217;installation de <strong>Neo4j</strong>, l&#8217;élaboration des outils nativement disponibles pour accéder à votre base de données et
-nous créerons notre premier graphe ce qui entraînera l&#8217;apprentissage de quelques requêtes <strong>Cypher</strong>.</p>
+<p>There are plenty of javascript libraries available like Linkurious.js, sigma.js, vivagraph.js etc&#8230;&#8203;</p>
+</div>
+<div class="paragraph">
+<p>But for quick demos, configuration is sometimes painful when you just want a directed graph, with arrows on the edges,
+nodes colors and maybe clustering.</p>
+</div>
+<div class="paragraph">
+<p>I discovered recently <a href="http://visjs.org/">vis.js</a>, a javascript library that makes things really easy.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll setup a quick demo with fake data to see how it works.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_setup">Setup</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I will use <a href="http://graphgen.neoxygen.io">Graphgen</a> to generate some data and import it into a Neo4j instance. If you do not have a local Neo4j instance
+you can make use of awesome Neo4j as a service providers like <a href="https://www.graphstory.com/">GraphStory</a> or <a href="http://www.graphenedb.com/">GrapheneDB</a>.</p>
+</div>
+<div class="paragraph">
+<p>We will generate a graph representing persons living in a country, these persons works for a company
+and these companies have a specialty in a programming language consultancy.</p>
+</div>
+<div class="paragraph">
+<p>You can paste this Cypher representation into Graphgen and click on generate :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cypher" data-lang="cypher">---
+(person:#Person:#User *100)-[:LIVES_IN *n..1]-&gt;(country:Country {name:country} *15)
+(person)-[:KNOWS *n..n]-&gt;(person)
+(person)-[:WORKS_AT *n..1]-&gt;(company:Company {name:company} *25)
+(company)-[:SPECIALIZE_IN *n..n]-&gt;(language:ProgrammingLanguage {name:progLanguage} *50)
+---</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can then click on "Populate", enter the details of your Neo4j instance location and import the graph into
+ your Neo4j database :</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/vis/vis_image2.png" alt="vis image2">
+</div>
+</div>
+<div class="paragraph">
+<p>If you open your database browser you can see that the data is relevant to our use case.</p>
+</div>
+<div class="paragraph">
+<p>Ok, but we can&#8217;t embed the Neo4j browser in our application.</p>
+</div>
+<div class="paragraph">
+<p>So let&#8217;s use vis.js</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_vis_js">Using Vis.js</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I&#8217;ll create a simple <code>index.html</code> file including jquery and vis.js.</p>
+</div>
+<div class="paragraph">
+<p>For installing jquery and vis, I used bower and the <code>bower install --save vis</code> and <code>bower install --save jquery</code> commands.</p>
+</div>
+<div class="paragraph">
+<p>We have created a graph with Graphgen but for the sake of this blog post I exported the graph as json on
+a github gist and we will be able to load it with Jquery&#8217;s getJson function</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-html" data-lang="html">&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Vis.js demo&lt;/title&gt;
+    &lt;link rel="stylesheet" href="bower_components/vis/dist/vis.min.css"/&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="graph" style="width:1000px; height:1000px;"&gt;&lt;/div&gt;
+&lt;script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="bower_components/vis/dist/vis.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+    var container = document.getElementById('graph');
+    var options = {};
+    var json = $.getJSON("https://gist.githubusercontent.com/ikwattro/8a8b0a6cfe4910db20b7/raw/de4fbbeecae349338aea065bd96a25913ed78301/graph.json")
+        .done(function(data){
+            var g = {
+                nodes: data.nodes,
+                edges: data.edges
+            };
+            var network = new vis.Network(container, g, options);
+        });
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here I just included the vis.js dependencies in my html file, I sent a Cypher query for getting the whole graph and
+with NeoClient I mapped the nodes and relationships to a Javascript GraphJSON like format.</p>
+</div>
+<div class="paragraph">
+<p>The <strong>graph</strong> html div container is the graph holder.</p>
+</div>
+<div class="paragraph">
+<p>As you can see in the last lines, setting up vis.js is really easy and by defining the first label as a group in
+the json data, the nodes are automatically colored differently.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/vis/vis_image4.png" alt="vis image4">
+</div>
+</div>
+<div class="sect2">
+<h3 id="_graph_styling">Graph Styling</h3>
+<div class="paragraph">
+<p>There are some issues however :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The nodes are elliptical, we want circles, no problem, a simple configuration and we can do it together with changing
+the font-size.</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">---
+var options = {
+        nodes: {
+            shape: 'circle',
+            radius: 15,
+            radiusMax: 20,
+            fontSize: 11
+        }
+    };
+    var network = new vis.Network(container, g, options);
+---</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/vis/vis_image5.png" alt="vis image5">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_physics">Physics</h3>
+<div class="paragraph">
+<p>So far so good, the directed graph is still moving due to the Physics. Configuring Physics is not easy and require some
+understanding of visualisation internals, which I don&#8217;t have.</p>
+</div>
+<div class="paragraph">
+<p>Vis.js has a really handful <code>configurePhysics</code> option that will show up multiple configuration sliders and once
+you&#8217;re happy with the configuration you want, you can export this configuration in a json format.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s activate this configuration option :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">---
+var options = {
+        configurePhysics: true,
+        nodes: {
+            shape: 'circle',
+            radius: 15,
+            radiusMax: 20,
+            fontSize: 11
+        }
+    };
+---</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/vis/vis_image7.png" alt="vis image7">
+</div>
+</div>
+<div class="paragraph">
+<p>Once done, you can just copy the physics json configuration that appeared in the browser and paste it in your configuration options :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cypher" data-lang="cypher">---
+var options = {
+        physics: {barnesHut: {gravitationalConstant: -15150, centralGravity: 3.45, springLength: 261, damping: 0.3}},
+        nodes: {
+            shape: 'circle',
+            radius: 15,
+            radiusMax: 20,
+            fontSize: 11
+        }
+    };
+---</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_edges_labels">Edges labels</h3>
+<div class="paragraph">
+<p>Did you ever see what you need to code in a library like D3.js in order to have arrows on the edges and the edges
+labels aligned on the edges ? A lot of code&#8230;&#8203; :(</p>
+</div>
+<div class="paragraph">
+<p>In Vis.js, it can not be more easier :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">---
+var options = {
+        //...
+        edges: {
+            style: 'arrow',
+            labelAlignment: 'line-above'
+        }
+    };
+---</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And that&#8217;s it !</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/vis/vis_image8.png" alt="vis image8">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Vis.js is a simple but powerful graph visualisation library, I feel like it is made for backend developers :)</p>
+</div>
+<div class="paragraph">
+<p>I invite you to discover more about it, view the awesome demos and use cases and why not integrate it in your next project.</p>
+</div>
+<div class="paragraph">
+<p>Have a nice weekend !</p>
 </div>
 </div>
 </div>
@@ -471,7 +723,7 @@ ou sur StackOverflow en taggant votre question avec "neo4j".</p>
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2015-05-15 16:27:00 CEST
+Last updated 2015-05-16 02:01:13 CEST
 &nbsp;|&nbsp;
 <a href="https://twitter.com/ikwattro" title="Follow me on Twitter" target="_blank" style="color:#fff;">Follow me on Twitter</a>
 &nbsp;|&nbsp;

@@ -6,6 +6,8 @@ I'm not solving problems, I'm experiencing new realities...
 
 == Latest articles | Derniers articles
 
+link:articles/easy-graph-visualization-with-vis-dot-js.html[Easy Graph Visualization with vis.js]
+
 link:articles/neo4j-22-match-path-on-dense-nodes.html[Neo4j 2.2 - Match paths on dense nodes]
 
 link:articles/generate-a-graphgist-from-your-graph-on-graphgen.html[Generate a graphgist of your graph on Graphgen]
