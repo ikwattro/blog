@@ -191,4 +191,6 @@ Vis.js is a simple but powerful graph visualisation library, I feel like it is m
 
 I invite you to discover more about it, view the awesome demos and use cases and why not integrate it in your next project.
 
+The demo with the Physics configuration is available here : http://chris.neoxygen.io/demos/
+
 Have a nice weekend !
